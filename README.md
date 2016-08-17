@@ -3,7 +3,15 @@
 ## Features
 - Log in with email.
 - Log in with Twitter etc.
+- Four types of dashboard interfaces:
+  + users
+  + clients
+  + account executives
+  + admins
 
+## Gem dependencies
+- Omniauth
+- Devise
 
 ## How to run the test suite
 ```
@@ -143,7 +151,32 @@ Rails.application.routes.draw do
 end
 ```
 
+#### Set up mailer
+Make sure that you configure mailer for all three environments in `config/environments/*`.
+
+Then, set up sendgrid on heroku.
+
+```
+$ heroku addons:create sendgrid:starter
+```
+
+Then, set up the route for `letter_opener_web`
+
+```rb
+Rails.application.routes.draw do
+  root to: 'static_pages#home'
+  ...
+  # For viewing delivered emails in development environment.
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+end
+```
+
 #### Error: Devise - ActionView::Template::Error (Missing host to link to! Please provide the :host parameter, set default_url_options[:host], or set :only_path to true):
+- Make sure that you configure mailer for all three environments in `config/environments/*`.
+
+#### Missing host to link to! Please provide the :host parameter, set default_url_options[:host], or set :only_path to true
 - Make sure that you configure mailer for all three environments in `config/environments/*`.
 
 ---

@@ -1,7 +1,12 @@
 require 'test_helper'
 
 class ClientTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  def setup
+    @client = create(:client)
+  end
+
+  test "should be valid" do
+    assert @client.valid?
+  end
 end

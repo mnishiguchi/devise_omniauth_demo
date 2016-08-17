@@ -1,2 +1,10 @@
-h1 StaticPages#home
-p Find me in app/views/static_pages/home.html.slim
+- if user_signed_in?
+  = render 'home_user'
+- elsif client_signed_in?
+  = render 'home_client'
+- elsif account_executive_signed_in?
+  = render 'home_ae'
+- elsif admin_signed_in?
+  = render 'home_admin'
+- else
+  = render 'home_default'

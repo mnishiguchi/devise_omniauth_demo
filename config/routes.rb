@@ -20,4 +20,9 @@ Rails.application.routes.draw do
   devise_for :admins, controllers: {
     sessions:           "admins/sessions"
   }
+
+  # For viewing delivered emails in development environment.
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 end

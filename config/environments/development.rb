@@ -26,10 +26,25 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # ==> Mailer
+  # Visit http://localhost:3000/letter_opener to view delivered emails.
 
-  config.action_mailer.perform_caching = false
+  config.action_mailer.perform_deliveries    = true
+  config.action_mailer.delivery_method       = :letter_opener_web
+  config.action_mailer.default_url_options   = { host: 'localhost', port: 3000 }
+  config.action_mailer.perform_caching       = false
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  config.action_mailer.raise_delivery_errors = true
+
+  # ==> Bullet
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.rails_logger = true
+  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
