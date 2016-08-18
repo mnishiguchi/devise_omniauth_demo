@@ -1,4 +1,5 @@
 # Setting up OmniAuth for Devise
+- [Devise+OmniAuthでQiita風の複数プロバイダ認証](http://qiita.com/mnishiguchi/items/e15bbef61287f84b546e) by Masatoshi Nishiguchi
 
 ## Description
 - Authentication with multiple social providers for a Devise user.
@@ -8,10 +9,12 @@
 ===
 ![Screenshot 2015-08-15 10.11.13.png](https://qiita-image-store.s3.amazonaws.com/0/82804/166c1d09-33ab-8066-cc0c-1ba4c200fa46.png)
 
+
 ### Registration scenarios (2 patterns）
 
 1. with an email and a password
 2. with a social account (password is not required)
+
 
 ### OAuth authentication scenarios（3 patterns)
 
@@ -22,11 +25,13 @@ Store that social info so that the user can log in with that social provider.
 **Not logged in but previously registered with a social provider**:
 Log the user.
 
+
 ### Email confirmation
 - We need to ensure that email addresses the users provide are real and valid.
 - No matter how the user is registered, the user must go through email confirmation procedure.
   + The user receives an email with a confirmation link which logs him/her in on click.
 - The same procedure is required for the user when updating email address.
+
 
 ### Linking user to his/her social profiles
 
@@ -35,9 +40,11 @@ Log the user.
 - Logged-in user
   + can connect to a social provider by clicking on a social link button. Then next time the user can log in with that social provider.
 
+
 ### Password
 
 - Password is not required if the user logs in with a social provider.
+
 
 ---
 
@@ -59,6 +66,7 @@ gem 'omniauth-facebook', '~> 3.0'
 gem 'omniauth-twitter', '~> 1.2', '>= 1.2.1'
 ...
 ```
+
 
 ### Set up Devise
 
@@ -135,8 +143,10 @@ end
 
 ### Obtain key and secret for each provider
 
-- [https://dev.twitter.com/](https://dev.twitter.com/)
+- [https://apps.twitter.com/](https://apps.twitter.com/)
+  + Use `http://127.0.0.1:3000/` for callback url.
 - [https://developers.facebook.com/](https://developers.facebook.com/)
+
 
 ### Configure OAuth for each provider
 
@@ -152,115 +162,90 @@ end
 NOTE: There are many different ways to manage API keys. For instance, [this article](http://qiita.com/awakia/items/03dd68dea5f15dc46c15#%E5%90%84provider%E3%81%AEoauth%E8%A8%AD%E5%AE%9A) talks about managing API keys in a separate file named `config/omniauth.yml`.
 
 
-## **---TODO---** ##
-
-
-
 ### Models
 
-#### Userモデル
+#### User model
+- The username field is optional.
 
-- 例ではusernameカラムを追加してあるがなくても良いと思う。
+`/app/models/user.rb`
 
-```rb:/app/models/user.rb
-# == Schema Information
-#
-# Table name: users
-#
-#  id                     :integer          not null, primary key
-#  email                  :string           default(""), not null
-#  encrypted_password     :string           default(""), not null
-#  reset_password_token   :string
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :inet
-#  last_sign_in_ip        :inet
-#  confirmation_token     :string
-#  confirmed_at           :datetime
-#  confirmation_sent_at   :datetime
-#  unconfirmed_email      :string
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  username               :string
-#
-
-class User < ActiveRecord::Base
-  #...
+```rb
+class User < ApplicationRecord
   has_many :social_profiles, dependent: :destroy
 
-  # deviseモジュールの設定
+  # Configure devise modules.
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable, :omniauthable
-  #...
 
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/
 
-  # emailの登録状況を判定するカスタムvalidatorを使用するためのおまじない。
+  # Validate email with a custom email validator.
   validates :email, presence: true, email: true
 
   def social_profile(provider)
     social_profiles.select{ |sp| sp.provider == provider.to_s }.first
   end
 
-  # 本物のemailがセットされているか確認。
   def email_verified?
     self.email && self.email !~ TEMP_EMAIL_REGEX
   end
 
-  # email確認がされていない状態にする。
   def reset_confirmation!
     self.update_column(:confirmed_at, nil)
   end
 
-  # Userモデル経由でcurrent_userを参照できるようにする。
+  # Makes current_user available via User.
+  # Userd in ApplicationController.
   def self.current_user=(user)
-    # Set current user in Thread.
     Thread.current[:current_user] = user
   end
 
-  # Userモデル経由でcurrent_userを参照する。
+  # References current_user via User.
   def self.current_user
-    # Get current user from Thread.
     Thread.current[:current_user]
   end
 end
 ```
 
-emailの登録状況を判定するカスタムvalidatorを作る。
+`/app/validators/email_validator.rb`
 
-```rb:app/validators/email_validator.rb
+```rb
 require 'mail'
+
+# https://github.com/plataformatec/devise/wiki/How-to:-Use-a-custom-email-validator-with-Devise
 class EmailValidator < ActiveModel::EachValidator
+
   def validate_each(record,attribute,value)
     begin
       m = Mail::Address.new(value)
       # We must check that value contains a domain, the domain has at least
       # one '.' and that value is an email address
       r = m.domain!=nil && m.domain.match('\.') && m.address == value
+
     rescue Exception => e
       r = false
     end
     record.errors[attribute] << (options[:message] || "is invalid") unless r
 
-    # 仮emailから変更しないとエラーになるようにする。
+    # Reject temporary email address
     record.errors[attribute] << 'must be given. Please give us a real one!!!' unless value !~ User::TEMP_EMAIL_REGEX
   end
 end
 ```
 
-#### SocialProfileモデル
+
+#### SocialProfile model
 
 ```bash
 rails g model SocialProfile user:references provider uid name nickname email url image_url description others:text credentials:text raw_info:text
 ```
 
-生成されたマイグレーションに、インデックスを追加。
+Add an index to the generated migration file.
 
-```rb:db/migrate/20160709210000_create_social_profiles.rb
+`/db/migrate/20160709210000_create_social_profiles.rb`
+
+```rb
 class CreateSocialProfiles < ActiveRecord::Migration[5.0]
   def change
     create_table :social_profiles do |t|
@@ -284,30 +269,11 @@ class CreateSocialProfiles < ActiveRecord::Migration[5.0]
 end
 ```
 
-そして`rake db:migrate`
+Then `rake db:migrate`
 
-```rb:/app/models/social_profile.rb
-# == Schema Information
-#
-# Table name: social_profiles
-#
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  provider    :string
-#  uid         :string
-#  name        :string
-#  nickname    :string
-#  email       :string
-#  url         :string
-#  image_url   :string
-#  description :string
-#  others      :text
-#  credentials :text
-#  raw_info    :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#
+`/app/models/social_profile.rb`
 
+```rb
 class SocialProfile < ApplicationRecord
   belongs_to :user
   store      :others
@@ -350,34 +316,19 @@ class SocialProfile < ApplicationRecord
 end
 ```
 
-### 認証データの処理
 
-#### OAuthPolicy
+### OAuthPolicy
 
-- 各プロバイダーが似たようで微妙に異なるデータを返してくるので、OAuthPolicyオブジェクトを介してOAuthデータを加工する。
-- これでSocialProfileモデルでは一貫した処理が可能になり、データの永続化に専念できる。
+- Each provider has a similar-but-slightly-different schema. Therefore this class processes the data into a standardized format.
+- This way, processing data in SocialProfile model becomes simple and SocialProfile model can focus on persisting data.
 
-```rb:/app/helpers/o_auth/o_auth_policy.rb
+`/app/helpers/o_auth_policy.rb`
+
+```rb
 module OAuthPolicy
   class Base
     attr_reader :provider, :uid, :name, :nickname, :email, :url, :image_url,
                 :description, :other, :credentials, :raw_info
-  end
-
-  class Facebook < OAuthPolicy::Base
-    def initialize(auth)
-      @provider    = auth["provider"]
-      @uid         = auth["uid"]
-      @name        = auth["info"]["name"]
-      @nickname    = ""
-      @email       = ""
-      @url         = "https://www.facebook.com/"
-      @image_url   = auth["info"]["image"]
-      @description = ""
-      @credentials = auth["credentials"].to_json
-      @raw_info    = auth["extra"]["raw_info"].to_json
-      freeze
-    end
   end
 
   class Twitter < OAuthPolicy::Base
@@ -398,133 +349,157 @@ module OAuthPolicy
 end
 ```
 
-#### OAuthService
 
-認証データに基づきユーザーアカウントを探したりする諸々の処理をOAuthServiceとしてまとめた。
+### Routing
 
-```rb:/app/helpers/o_auth/o_auth_service.rb
-module OAuthService
-  class GetOAuthUser
+`/config/routes.rb`
 
-    def self.call(auth)
-      # 認証データに対応するSocialProfileが存在するか確認し、なければSocialProfileを新規作成。
-      # 認証データをSocialProfileオブジェクトにセットし、データベースに保存。
-      profile = SocialProfile.find_for_oauth(auth)
-      # ユーザーを探す。
-      # 第１候補：ログイン中のユーザー、第２候補：SocialProfileオブジェクトに紐付けされているユーザー。
-      user = current_or_profile_user(profile)
-      unless user
-        # 第３候補：認証データにemailが含まれていればそれを元にユーザーを探す。
-        user = User.where(email: email).first if verified_email_from_oauth(auth)
-        # 見つからなければ、ユーザーを新規作成。
-        user ||= find_or_create_new_user(auth)
-      end
-      associate_user_with_profile!(user, profile)
-      user
-    end
-
-    private
-
-      class << self
-
-        def current_or_profile_user(profile)
-          user = User.current_user.presence || profile.user
-        end
-
-        # 見つからなければ、ユーザーを新規作成。emailは後に確認するので今は仮のものを入れておく。
-        # TEMP_EMAIL_PREFIXを手掛かりに後に仮のものかどうかの判別が可能。
-        # OmniAuth認証時はパスワード入力は免除するので、ランダムのパスワードを入れておく。
-        def find_or_create_new_user(auth)
-          # Query for user if verified email is provided
-          email = verified_email_from_oauth(auth)
-          user = User.where(email: email).first if email
-          if user.nil?
-            temp_email = "#{User::TEMP_EMAIL_PREFIX}-#{auth.uid}-#{auth.provider}.com"
-            user = User.new(
-              username: auth.extra.raw_info.name,
-              email:    email ? email : temp_email,
-              password: Devise.friendly_token[0,20]
-            )
-            # email確認メール送信を延期するために一時的にemail確認済みの状態にする。
-            user.skip_confirmation!
-            # email仮をデータベースに保存するため、validationを一時的に無効化。
-            user.save(validate: false)
-            user
-          end
-        end
-
-        def verified_email_from_oauth(auth)
-          auth.info.email if auth.info.email && (auth.info.verified || auth.info.verified_email)
-        end
-
-        # ユーザーとSocialProfileオブジェクトを関連づける。
-        def associate_user_with_profile!(user, profile)
-          profile.update!(user_id: user.id) if profile.user != user
-        end
-      end
-    end
-end
-```
-
-### ルーティング
-
-```rb:/config/routes.rb
+```rb
 Rails.application.routes.draw do
   ...
+  devise_for :users, controllers: {
+    sessions:           "users/sessions",
+    passwords:          "users/passwords",
+    registrations:      "users/registrations",
+    confirmations:      "users/confirmations",
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
 
-  # Deviseのコントローラを上書きするため。
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks',
-                                    registrations: "registrations",
-                                    confirmations: "confirmations" }
-
-  # OmniAuth認証後、email入力を求める処理のため。
+  # Ask for email address after successful OAuth.
   match '/users/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], as: :finish_signup
+
   ...
 end
 ```
 
-### コントローラ
 
-#### omniauth_callbacks_controller
+### Controllers
 
-```rb:/app/controllers/omniauth_callbacks_controller.rb
-class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+### ApplicationController
 
-  # いくつプロバイダーを利用しようが処理は共通しているので本メソッドをエイリアスとして流用。
+```rb
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
+
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_current_user
+
+  protected
+
+    def configure_permitted_parameters
+      added_attrs = [:username, :email, :password, :password_confirmation, :remember_me]
+      devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
+      devise_parameter_sanitizer.permit :account_update, keys: added_attrs
+    end
+
+    # Make current_user accessible via User.
+    def set_current_user
+      User.current_user = current_user
+    end
+end
+```
+
+
+#### Users::OmniauthCallbacksController
+
+`/app/controllers/users/omniauth_callbacks_controller.rb`
+
+```rb
+class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+
+  # Invoked after omniauth authentication is done.
+  # This method can handle authentication for all the providers.
+  # Alias this method as a provider name such as `twitter`, `facebook`, etc.
   def callback_for_all_providers
-    unless env["omniauth.auth"].present?
+
+    # Obtain the authentication data.
+    @omniauth = request.env["omniauth.auth"]
+
+    # Ensure that the authentication data exists.
+    unless @omniauth.present?
       flash[:danger] = "Authentication data was not provided"
       redirect_to root_url and return
     end
+
+    # Obtain the provider name from the callee.
     provider = __callee__.to_s
-    user = OAuthService::GetOAuthUser.call(env["omniauth.auth"])
-    # ユーザーがデータベースに保存されており、且つemailを確認済みであれば、ユーザーをログインする。
-    if user.persisted? && user.email_verified?
-      sign_in_and_redirect user, event: :authentication
+
+    # Search for the user based on the authentication data.
+    # Obtain a SocialProfile object that corresponds to the authentication data.
+    profile = SocialProfile.find_for_oauth(@omniauth)
+
+    # Obtain logged-in user or user with a registered profile.
+    @user = User.current_user || profile.user
+
+    # If user was not found, search by email or create a new user.
+    @user ||= find_by_verified_email_or_create_new_user(@omniauth)
+
+    associate_user_with_profile(@user, profile)
+
+    if @user.persisted? && @user.email_verified?
+      sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: provider.capitalize) if is_navigational_format?
     else
-      user.reset_confirmation!
-      flash[:warning] = "We need your email address before proceeding."
-      redirect_to finish_signup_path(user)
+      @user.reset_confirmation!
+      flash[:warning] = "Please enter your email address before proceeding."
+      redirect_to finish_signup_path(@user)
     end
   end
+
+  # Alias the callback_for_all_providers method for providers.
   alias_method :facebook, :callback_for_all_providers
   alias_method :twitter,  :callback_for_all_providers
+
+  private
+
+    def find_by_verified_email_or_create_new_user(auth)
+
+      # If the authentication data includes verified email, search for user.
+      email = verified_email_from_oauth(auth)
+      user = User.where(email: email).first if email
+
+      unless user
+        # If user has no verified email, give the user a temp email address.
+        # Later, we can detect unregistered email based on TEMP_EMAIL_PREFIX.
+        # Password is not required for users with social_profiles therefore
+        # it is OK to generate a random password for them.
+        temp_email = "#{User::TEMP_EMAIL_PREFIX}-#{Devise.friendly_token[0,20]}.com"
+        user = User.new(username: auth.extra.raw_info.name,
+                        email:    email ? email : temp_email,
+                        password: Devise.friendly_token[0,20] )
+
+        # This is to postpone the delivery of confirmation email.
+        user.skip_confirmation!
+
+        # Save the temp email to database, skipping validation.
+        user.save(validate: false)
+        user
+      end
+    end
+
+    def verified_email_from_oauth(auth)
+      auth.info.email if auth.info.email && (auth.info.verified || auth.info.verified_email)
+    end
+
+    def associate_user_with_profile(user, profile)
+      unless profile.user == user
+        profile.update!(user_id: user.id)
+      end
+    end
 end
 ```
 
-#### users_controller
 
-```rb:/app/controllers/users_controller.rb
+#### UsersController
+
+`/app/controllers/users_controller.rb`
+
+```rb
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: :finish_signup
 
-  ...
-
-  # OAuth認証による新規登録の締めを司るアクション。
-  # ユーザーデータを更新に成功したら、email確認メールを送付する。
-  # GET   /users/:id/finish_signup - 必要データの入力を求める。
-  # PATCH /users/:id/finish_signup - ユーザーデータを更新。
+  # GET   /users/:id/finish_signup - Add email form
+  # PATCH /users/:id/finish_signup - Update user data based on the form
   def finish_signup
     @user = User.find(params[:id])
     if request.patch? && @user.update(user_params)
@@ -534,40 +509,42 @@ class UsersController < ApplicationController
     end
   end
 
-  ...
-
   private
 
-    # user_paramsにアクセスするため。
     def user_params
-      accessible = [ :username, :email ]
+      accessible = [ :email ]
+
+      # Ignore password if password is blank.
       accessible << [ :password, :password_confirmation ] unless params[:user][:password].blank?
       params.require(:user).permit(accessible)
     end
-    ...
 end
 ```
 
-フォーム
+`app/views/users/finish_signup.html.slim`
 
-```slim:app/views/users/finish_signup.html.slim
+```slim
 .row
   .col-sm-offset-3.col-sm-6
-    h1 Add Email
-    = simple_form_for(@user, url: finish_signup_path(@user)) do |f|
-      = f.input :username, autofocus: true, class: 'form-control', placeholder: "Username"
-      = f.input :email, autofocus: true, class: 'form-control', placeholder: "Email"
-      .form-group
-        = f.submit 'Add email', class: 'btn btn-primary'
+    .well
+      .h4 Please enter your email address.
+      = simple_form_for(@user, url: finish_signup_path(@user)) do |f|
+        = f.input :email, autofocus: true, class: 'form-control'
+        .form-group
+          = f.submit 'Send confirmation email', class: 'btn btn-primary'
+
+javascript:
+  // Clear the temp email.
+  $('#user_email').val("");
 ```
 
 
-
 #### social_profiles_controller
+- Disconnect from a social profile.
 
-Facebook/Twitterへの接続を解除する。
+`/app/controllers/social_profiles_controller.rb`
 
-```rb:/app/controllers/social_profiles_controller.rb
+```rb
 class SocialProfilesController < ApplicationController
   before_action :authenticate_user!
   before_action :correct_user!
@@ -582,18 +559,21 @@ class SocialProfilesController < ApplicationController
 
     def correct_user!
       @profile = SocialProfile.find(params[:id])
-      redirect_to root_url and return unless @profile.user_id == current_user.id
+      unless @profile.user_id == current_user.id
+        redirect_to root_url and return
+      end
     end
 end
 ```
 
 #### confirmations_controller
+- Allow the user for login by clicking the link in confirmation email.
 
-email確認メールのリンクをクリックしたら即、ログインするため上書き。
+`/app/controllers/confirmations_controller.rb`
 
-```rb:/app/controllers/confirmations_controller.rb
-class ConfirmationsController < Devise::ConfirmationsController
-
+```rb
+class Users::ConfirmationsController < Devise::ConfirmationsController
+  # GET /resource/confirmation?confirmation_token=abcdef
   # Override
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
@@ -602,7 +582,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       set_flash_message(:notice, :confirmed) if is_flashing_format?
 
-      sign_in(resource) #<== この一行を加えるのみ
+      sign_in(resource) #<== Only this line is changed.
 
       respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
     else
@@ -616,8 +596,10 @@ end
 
 OmniAuthで認証のユーザーに対して、パスワード入力を免除させるため上書き。
 
-```rb:/app/controllers/registrations_controller.rb
-class RegistrationsController < Devise::RegistrationsController
+`/app/controllers/registrations_controller.rb`
+
+```rb
+class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
@@ -628,13 +610,45 @@ class RegistrationsController < Devise::RegistrationsController
 end
 ```
 
-## テスト
+
+### Set up `letter_opener_web` (Optional)
+
+- [docs](https://github.com/ryanb/letter_opener)
+
+`Gemfile`
+
+```rb
+gem "letter_opener", :group => :development
+```
+
+Then set the delivery method in `config/environments/development.rb`
+
+```rb
+config.action_mailer.delivery_method = :letter_opener
+```
+
+Then set the route in `config/routes.rb`
+
+```rb
+Rails.application.routes.draw do
+  root to: 'static_pages#home'
+  ...
+  # For viewing delivered emails in development environment.
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+end
+```
+
+
+## Testing
 
 - [OmniAuthのテスト](http://qiita.com/mnishiguchi/items/3d6a4ec36c2237a11660)
 - [email確認(confirmable)のテスト](http://qiita.com/mnishiguchi/items/ff480b681537c99daeaa)
 
+---
 
-## 参考資料
+## References
 
 Devise
 

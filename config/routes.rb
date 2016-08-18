@@ -21,6 +21,9 @@ Rails.application.routes.draw do
     sessions:           "admins/sessions"
   }
 
+  # Ask for email address after successful OAuth.
+  match '/users/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], as: :finish_signup
+
   # For viewing delivered emails in development environment.
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

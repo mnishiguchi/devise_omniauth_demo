@@ -1,11 +1,11 @@
 development:
   twitter:
-    key: T0ONiGrNuMNsKb5AyNC05mOpe
-    secret: FxrQ6ddvlVbIaUlvEm0xg4fgoK9ACmWWnkesdU60ck1vJFoBM8
+    key: vKz011Lx017SORfImYyQeqtkk
+    secret: KLhAcbKubzDyKp5nJSWaK17j3vWCm8IQbQrheFOdx4GcG3SgWF
 test:
   twitter:
-    key: T0ONiGrNuMNsKb5AyNC05mOpe
-    secret: FxrQ6ddvlVbIaUlvEm0xg4fgoK9ACmWWnkesdU60ck1vJFoBM8
+    key: vKz011Lx017SORfImYyQeqtkk
+    secret: KLhAcbKubzDyKp5nJSWaK17j3vWCm8IQbQrheFOdx4GcG3SgWF
 production:
   twitter:
     key: <%= ENV["TWITTER_KEY"] %>

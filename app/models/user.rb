@@ -22,7 +22,39 @@
 #
 
 class User < ApplicationRecord
-  # Configure Devise modules
+  has_many :social_profiles, dependent: :destroy
+
+  # Configure devise modules.
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-         :trackable, :validatable, :confirmable, :omniauthable
+         :trackable, :validatable, :confirmable, :omniauthable,
+         omniauth_providers: [:twitter]
+
+  TEMP_EMAIL_PREFIX = 'change@me'
+  TEMP_EMAIL_REGEX = /\Achange@me/
+
+  # Validate email with a custom email validator.
+  validates :email, presence: true, email: true
+
+  def social_profile(provider)
+    social_profiles.select{ |sp| sp.provider == provider.to_s }.first
+  end
+
+  def email_verified?
+    self.email && self.email !~ TEMP_EMAIL_REGEX
+  end
+
+  def reset_confirmation!
+    self.update_column(:confirmed_at, nil)
+  end
+
+  # Makes current_user available via User.
+  # Userd in ApplicationController.
+  def self.current_user=(user)
+    Thread.current[:current_user] = user
+  end
+
+  # References current_user via User.
+  def self.current_user
+    Thread.current[:current_user]
+  end
 end

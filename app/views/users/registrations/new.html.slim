@@ -14,6 +14,7 @@
       .form-group
         .btn-group
           = f.button :submit, "Sign up, or ...", class: "btn btn-primary outline signup_submit"
+          = render 'shared/omniauth_buttons', text: { twitter: "Log in with Twitter" }
 
     .form-group
       = render "users/shared/links"
