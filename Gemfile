@@ -69,6 +69,7 @@ group :test do
   gem 'minitest-rails-capybara'
   gem 'minitest-reporters'
   gem 'rails-controller-testing'
+  gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end
 

@@ -179,8 +179,16 @@ end
 #### Missing host to link to! Please provide the :host parameter, set default_url_options[:host], or set :only_path to true
 - Make sure that you configure mailer for all three environments in `config/environments/*`.
 
----
 
+### Omniauth
+- [Devise+OmniAuthでQiita風の複数プロバイダ認証](http://qiita.com/mnishiguchi/items/e15bbef61287f84b546e)
+
+### Minitest
+- [Use Minitest for Your Next Rails Project](https://mattbrictson.com/minitest-and-rails)
+- [4 Fantastic Ways to Set Up State in Minitest](http://chriskottom.com/blog/2014/10/4-fantastic-ways-to-set-up-state-in-minitest/)
+- [thoughtbot/shoulda-matchers](https://github.com/thoughtbot/shoulda-matchers)
+
+---
 
 ## Some techniques
 

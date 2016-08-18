@@ -1,0 +1,12 @@
+development:
+  twitter:
+    key: T0ONiGrNuMNsKb5AyNC05mOpe
+    secret: FxrQ6ddvlVbIaUlvEm0xg4fgoK9ACmWWnkesdU60ck1vJFoBM8
+test:
+  twitter:
+    key: T0ONiGrNuMNsKb5AyNC05mOpe
+    secret: FxrQ6ddvlVbIaUlvEm0xg4fgoK9ACmWWnkesdU60ck1vJFoBM8
+production:
+  twitter:
+    key: <%= ENV["TWITTER_KEY"] %>
+    secret: <%= ENV["TWITTER_SECRET"] %>
