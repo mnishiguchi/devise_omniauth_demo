@@ -1,7 +1,11 @@
 .jumbotron
-  .h1 Hello
+  .h1 
+    | Hello, welcome!
+    ' &nbsp;
   .h3
     ' Please
     = link_to "sign up", new_user_registration_path
     | ,&nbsp;
     = link_to "log in", new_user_session_path
+    |  with password or ... 
+  .h3= render 'shared/omniauth_buttons', text: { twitter: "Log in with Twitter" }
