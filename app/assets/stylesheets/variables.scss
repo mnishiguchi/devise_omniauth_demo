@@ -46,11 +46,11 @@ $root-font-family: "PT Serif", 'Times New Roman', serif;
 $root-font-size: 18px;
 $root-line-height: 1.6;
 
-$header-color: $gray_4;
-$footer-color: $gray_5;
 
+$header-color: rgb(163,84,89);
 $body-color: $gray-5;
-$body-bg: #fcfbfb;
+$body-bg: rgba(224,204,114,.3);
+$footer-color: rgb(163,84,89);
 $link-color: $blue;
 $link-hover-color: #6a9fb5;
 
