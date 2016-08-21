@@ -27,7 +27,10 @@ class User < ApplicationRecord
   # Configure devise modules.
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable, :omniauthable,
-         omniauth_providers: [:twitter]
+         :omniauth_providers => [
+           :google_oauth2,
+           :twitter
+         ]
 
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/

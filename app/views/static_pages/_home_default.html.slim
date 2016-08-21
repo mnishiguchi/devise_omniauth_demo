@@ -3,9 +3,13 @@
     | Hello, welcome!
     ' &nbsp;
   .h3
-    ' Please
-    = link_to "sign up", new_user_registration_path
-    | ,&nbsp;
-    = link_to "log in", new_user_session_path
-    |  with password or ... 
-  .h3= render 'shared/omniauth_buttons', text: { twitter: "Log in with Twitter" }
+    a[href="/users/auth/google_oauth2" class="btn btn-omniauth-google"]
+      = fa_icon("fw google")
+      | Continue with Google+
+      
+    a[href="/users/auth/twitter" class="btn btn-omniauth-twitter"]
+      = fa_icon("fw twitter")
+      | Continue with Twitter
+      
+    a[href="/users/sign_up" class="btn btn-sign-in-with-email"]
+      | Sign in or sign up with email

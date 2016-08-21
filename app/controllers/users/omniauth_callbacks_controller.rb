@@ -1,9 +1,17 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
+  def facebook; omniauth_callback; end
+  # def github; omniauth_callback; end
+  def google_oauth2; omniauth_callback; end
+  # def linkedin; omniauth_callback; end
+  def twitter; omniauth_callback; end
+
   # Invoked after omniauth authentication is done.
   # This method can handle authentication for all the providers.
   # Alias this method as a provider name such as `twitter`, `facebook`, etc.
-  def callback_for_all_providers
+  def omniauth_callback
+
+    # binding.pry
 
     # Obtain the authentication data.
     @omniauth = request.env["omniauth.auth"]
@@ -38,10 +46,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to finish_signup_path(@user)
     end
   end
-
-  # Alias the callback_for_all_providers method for providers.
-  alias_method :facebook, :callback_for_all_providers
-  alias_method :twitter,  :callback_for_all_providers
 
   private
 
