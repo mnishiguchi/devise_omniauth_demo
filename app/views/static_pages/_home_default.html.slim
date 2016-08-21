@@ -1,15 +1,17 @@
-.jumbotron
-  .h1 
-    | Hello, welcome!
-    ' &nbsp;
-  .h3
-    a[href="/users/auth/google_oauth2" class="btn btn-omniauth-google"]
-      = fa_icon("fw google")
-      | Continue with Google+
-      
-    a[href="/users/auth/twitter" class="btn btn-omniauth-twitter"]
-      = fa_icon("fw twitter")
-      | Continue with Twitter
-      
-    a[href="/users/sign_up" class="btn btn-sign-in-with-email"]
-      | Sign in or sign up with email
+.row
+  .col-sm-offset-2.col-sm-8
+    .jumbotron
+      .h2.text-center 
+        | Hello, welcome!
+        ' &nbsp;
+    p
+      a[href="/users/auth/google_oauth2" class="btn btn-omniauth-google"]
+        = fa_icon("fw google")
+        | Continue with Google+
+        
+      a[href="/users/auth/twitter" class="btn btn-omniauth-twitter"]
+        = fa_icon("fw twitter")
+        | Continue with Twitter
+        
+      a[href="/users/sign_up" class="btn btn-sign-in-with-email"]
+        | Sign in or sign up with email

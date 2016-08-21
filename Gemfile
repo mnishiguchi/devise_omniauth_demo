@@ -7,7 +7,7 @@ gem 'puma', '~> 3.0'
 gem 'awesome_print'
 gem 'bootstrap-sass'
 gem 'coffee-rails'
-gem 'devise'
+gem 'devise' # 4.2
 gem 'faker'
 gem 'font-awesome-rails'
 gem 'jbuilder', '~> 2.5'

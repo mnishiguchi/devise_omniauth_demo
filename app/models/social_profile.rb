@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: social_profiles
+#
+#  id          :integer          not null, primary key
+#  user_id     :integer
+#  provider    :string
+#  uid         :string
+#  name        :string
+#  nickname    :string
+#  email       :string
+#  url         :string
+#  image_url   :string
+#  description :string
+#  others      :text
+#  credentials :text
+#  raw_info    :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class SocialProfile < ApplicationRecord
   belongs_to :user
   store      :others
@@ -5,7 +26,7 @@ class SocialProfile < ApplicationRecord
   validates_uniqueness_of :uid, scope: :provider
 
   # Returns a SocialProfile object that corresponds to the specified data.
-  def self.find_for_oauth(auth)
+  def self.find_from_oauth(auth)
     profile = find_or_create_by(uid: auth.uid, provider: auth.provider)
     profile.save_oauth_data(auth)
     profile
@@ -14,6 +35,10 @@ class SocialProfile < ApplicationRecord
   def save_oauth_data(auth)
     # Create params in correct format through a policy, then update the profile.
     self.update_attributes(policy(auth).params) if valid_oauth?(auth)
+  end
+
+  def associate_with_user(user)
+    self.update!(user_id: user.id) unless self.user == user
   end
 
   private
