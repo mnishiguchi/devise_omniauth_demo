@@ -61,7 +61,7 @@ class User < ApplicationRecord
     Thread.current[:current_user]
   end
 
-  def self.find_or_new_from_oauth(auth)
+  def self.find_or_create_from_oauth(auth)
 
     # Search for the user based on the authentication data.
     # Obtain a SocialProfile object that corresponds to the authentication data.

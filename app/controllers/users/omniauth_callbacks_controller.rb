@@ -11,13 +11,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # Alias this method as a provider name such as `twitter`, `facebook`, etc.
   def omniauth_callback
 
-    # binding.pry
-
     # Obtain the authentication data.
-    @omniauth = request.env["omniauth.auth"]
+    @auth = request.env["omniauth.auth"]
 
     # Ensure that the authentication data exists.
-    unless @omniauth.present?
+    unless @auth.present?
       flash[:danger] = "Authentication data was not provided"
       redirect_to root_url and return
     end
@@ -26,7 +24,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     provider = __callee__.to_s
 
     # If user was not found, search by email or create a new user.
-    @user = User.find_or_new_from_oauth(@omniauth)
+    @user = User.find_or_create_from_oauth(@auth)
 
     if @user.persisted? && @user.email_verified?
       sign_in_and_redirect @user, event: :authentication

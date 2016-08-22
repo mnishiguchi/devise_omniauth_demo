@@ -7,19 +7,9 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if request.patch?
-      # The user email was successfully submitted and the email is not confirmed yet.
-      if @user.update(user_params) && !@user.confirmed?
+      if signed_up_but_not_confirmed? || email_already_taken?
         @user.send_confirmation_instructions
         flash[:info] = 'We sent you a link to sign in. Please check your inbox.'
-        redirect_to root_url
-      # The same email is already in the database.
-      elsif email_already_taken?
-        # TODO: custom confirmation email?
-        # When confirmation link is clicked, we need to associate this email
-        # with the oauth user.
-        # @user.send_confirmation_instructions
-        # flash[:info] = 'We sent you a link to sign in. Please check your inbox.'
-        flash[:warning] = 'TODO: email_already_taken. When confirmation link is clicked, we need to associate this email with the oauth user.'
         redirect_to root_url
       end
     end
@@ -27,6 +17,15 @@ class UsersController < ApplicationController
 
   private
 
+    # Returns true if the user was successfully signed up but
+    # his/her email is not confirmed yet.
+    def signed_up_but_not_confirmed?
+      @user.skip_confirmation_notification!
+      @user.update(user_params) && !@user.confirmed?
+    end
+
+    # Returns true if the submitted email already exists in the database.
+    # Returns false if there are any other error messages.
     def email_already_taken?
       regex = /has already been taken/
       messages = @user.errors.messages
