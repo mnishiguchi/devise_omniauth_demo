@@ -1,3 +1,4 @@
+# http://www.rubydoc.info/github/plataformatec/devise/Devise/RegistrationsController
 class Users::ConfirmationsController < Devise::ConfirmationsController
   # GET /resource/confirmation/new
   # def new
@@ -10,7 +11,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # GET /resource/confirmation?confirmation_token=abcdef
-  # Override
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
     yield resource if block_given?
@@ -18,12 +18,29 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       set_flash_message(:notice, :confirmed) if is_flashing_format?
 
-      sign_in(resource) #<== Only this line is changed.
+      sign_in(@user)
 
-      respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
+      respond_with_navigational(resource) do
+        redirect_to after_confirmation_path_for(resource_name, resource)
+      end
+    elsif already_confirmed?
+      # If the only error is that user is already confirmed, just log him/her in.
+      sign_in(@user)
+      respond_with_navigational(resource) do
+        redirect_to after_confirmation_path_for(resource_name, resource)
+      end
     else
-      respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+      # If there are other errors, we need to confirm the user's email again.
+      respond_with_navigational(resource.errors, status: :unprocessable_entity) do
+        render :new
+      end
     end
+  end
+
+  def already_confirmed?
+    regex = /was already confirmed/
+    messages = resource.errors.messages
+    (messages.size == 1) && regex.match(messages[:email].first)
   end
 
   # protected

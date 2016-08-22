@@ -6,13 +6,15 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = YAML.load_file("#{Rails.root}/config/devise.yml")[Rails.env]["secret_key"]
-  config.secret_key = Rails.application.secrets.devise_secret_key
+  config.secret_key = YAML.load_file("#{Rails.root}/config/devise_secrets.yml")[Rails.env]["secret_key"]
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  config.omniauth :google_oauth2,
+    Rails.application.secrets.google_key,
+    Rails.application.secrets.google_secret
   config.omniauth :twitter,
     Rails.application.secrets.twitter_key,
     Rails.application.secrets.twitter_secret

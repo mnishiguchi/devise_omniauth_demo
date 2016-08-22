@@ -5,14 +5,33 @@ class UsersController < ApplicationController
   # PATCH /users/:id/finish_signup - Update user data based on the form
   def finish_signup
     @user = User.find(params[:id])
-    if request.patch? && @user.update(user_params)
-      @user.send_confirmation_instructions unless @user.confirmed?
-      flash[:info] = 'We sent you a confirmation email. Please find a confirmation link.'
-      redirect_to root_url
+
+    if request.patch?
+      # The user email was successfully submitted and the email is not confirmed yet.
+      if @user.update(user_params) && !@user.confirmed?
+        @user.send_confirmation_instructions
+        flash[:info] = 'We sent you a link to sign in. Please check your inbox.'
+        redirect_to root_url
+      # The same email is already in the database.
+      elsif email_already_taken?
+        # TODO: custom confirmation email?
+        # When confirmation link is clicked, we need to associate this email
+        # with the oauth user.
+        # @user.send_confirmation_instructions
+        # flash[:info] = 'We sent you a link to sign in. Please check your inbox.'
+        flash[:warning] = 'TODO: email_already_taken. When confirmation link is clicked, we need to associate this email with the oauth user.'
+        redirect_to root_url
+      end
     end
   end
 
   private
+
+    def email_already_taken?
+      regex = /has already been taken/
+      messages = @user.errors.messages
+      (messages.size == 1) && regex.match(messages[:email].first)
+    end
 
     def user_params
       accessible = [ :email ]
