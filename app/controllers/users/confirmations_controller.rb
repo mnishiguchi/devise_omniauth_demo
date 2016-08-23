@@ -33,10 +33,18 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       # social profiles associated with it, sign in the user with new account and
       # archive the old one by marking its email.
       email = @user.email
-      old_user = User.find_by email: email
-      if old_user && old_user.social_profiles.size == 0
-        old_user.update_column(:email, "archive__#{email}")
+
+      # Check if there is a user registered with the same email in the database
+      # because email duplication is restricted.
+      # We will keep the new one and archive the old one.
+      if (old_user = User.find_by email: email)
+        if old_user.social_profiles.empty?
+          old_user.archive!
+        else
+          @user.merge_social_profiles(old_user) && old_user.archive!
+        end
       end
+
       set_flash_message(:notice, :confirmed) if is_flashing_format?
       sign_in(@user)
       respond_with_navigational(resource) do
@@ -51,17 +59,19 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     end
   end
 
-  def email_exists?
-    regex = /has already been taken/
-    messages = resource.errors.messages
-    (messages.size == 1) && regex.match(messages[:email].first)
-  end
+  private
 
-  def already_confirmed?
-    regex = /was already confirmed/
-    messages = resource.errors.messages
-    (messages.size == 1) && regex.match(messages[:email].first)
-  end
+    def email_exists?
+      regex = /has already been taken/
+      messages = resource.errors.messages
+      (messages.size == 1) && regex.match(messages[:email].first)
+    end
+
+    def already_confirmed?
+      regex = /was already confirmed/
+      messages = resource.errors.messages
+      (messages.size == 1) && regex.match(messages[:email].first)
+    end
 
   # protected
 

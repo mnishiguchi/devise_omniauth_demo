@@ -62,6 +62,16 @@ class User < ApplicationRecord
     Thread.current[:current_user]
   end
 
+  def archive!
+    self.update_column(:email, "#{Time.now.to_i}_#{self.email}")
+  end
+
+  def merge_social_profiles(other)
+    other.social_profiles.tap do |profiles|
+      profiles.each { |profile| profile.associate_with_user(self) }
+    end
+  end
+
   def self.find_or_create_from_oauth(auth)
 
     # Search for the user based on the authentication data.
