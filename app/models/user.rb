@@ -28,6 +28,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :trackable, :validatable, :confirmable, :omniauthable,
          :omniauth_providers => [
+           :facebook,
            :google_oauth2,
            :twitter
          ]

@@ -1,3 +1,5 @@
+# This module provides utitity classes to format params for creating a social
+# profile record based on the result of OAuth authentication.
 module OAuthPolicy
   class Base
     def params
@@ -15,7 +17,23 @@ module OAuthPolicy
     end
   end
 
-  # TODO
+  class Facebook < OAuthPolicy::Base
+    def initialize(auth)
+      info = auth['info']
+      @provider    = auth["provider"]
+      @uid         = auth["uid"]
+      @name        = info["name"]
+      @nickname    = ""
+      @email       = info["email"]
+      @url         = "https://www.facebook.com/#{@uid}"
+      @image_url   = info["image"]
+      @description = ""
+      @credentials = auth["credentials"].to_json
+      @raw_info    = auth["extra"]["raw_info"].to_json
+      freeze
+    end
+  end
+
   class GoogleOauth2 < OAuthPolicy::Base
     def initialize(auth)
       info = auth['info']
@@ -23,10 +41,10 @@ module OAuthPolicy
       @uid         = auth["uid"]
       @name        = info["name"]
       @nickname    = ""
-      @email       = ""
-      @url         = info["urls"]
+      @email       = info["email"]
+      @url         = "https://plus.google.com/"
       @image_url   = info["image"]
-      @description = info["description"].try(:truncate, 255)
+      @description = ""
       @credentials = auth["credentials"].to_json
       @raw_info    = auth["extra"]["raw_info"].to_json
       freeze
@@ -49,21 +67,4 @@ module OAuthPolicy
       freeze
     end
   end
-
-  # class Facebook < OAuthPolicy::Base
-  #   def initialize(auth)
-  #     info = auth['info']
-  #     @provider    = auth["provider"]
-  #     @uid         = auth["uid"]
-  #     @name        = info["name"]
-  #     @nickname    = ""
-  #     @email       = ""
-  #     @url         = "https://www.facebook.com/"
-  #     @image_url   = info["image"]
-  #     @description = ""
-  #     @credentials = auth["credentials"].to_json
-  #     @raw_info    = auth["extra"]["raw_info"].to_json
-  #     freeze
-  #   end
-  # end
 end

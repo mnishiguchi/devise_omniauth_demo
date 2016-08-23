@@ -5,6 +5,10 @@
         | Hello, welcome!
         ' &nbsp;
     p
+      a[href="/users/auth/facebook" class="btn btn-omniauth-facebook"]
+        = fa_icon("fw facebook")
+        | Continue with Facebook
+
       a[href="/users/auth/google_oauth2" class="btn btn-omniauth-google"]
         = fa_icon("fw google")
         | Continue with Google+
