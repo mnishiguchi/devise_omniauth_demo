@@ -11,6 +11,14 @@ Minitest::Reporters.use!
 require 'minitest/rails/capybara'
 require 'capybara-screenshot/minitest'
 
+# Shoulda-matchers
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :minitest
+    with.library :rails
+  end
+end
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
@@ -20,11 +28,4 @@ class ActiveSupport::TestCase
 
   # Make helpers available in tests.
   include ApplicationHelper
-
-  private
-
-    # Returns true inside an integration test.
-    def integration_test?
-      defined?(post_via_redirect)
-    end
 end

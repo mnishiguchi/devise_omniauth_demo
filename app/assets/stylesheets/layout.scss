@@ -112,7 +112,6 @@ span.shrink {
 footer {
   font-family: $heading-font-family;
   vertical-align: middle;
-  margin-top: 4rem;
   padding: 4rem 0;
   color: $gray-2;
   background: $footer-color;
@@ -145,8 +144,10 @@ footer {
 // Override BS3.
 //
 .container .jumbotron {
-  background-color: $gray-1;
   border-radius: 0;
+  background: $gray-1 url(https://www.apartmentshowcase.com/stylesheets/css/images/temp/intro.jpg) no-repeat fixed center;
+  height: 100vh;
+  margin-bottom: 0;
 }
 
 .alert {

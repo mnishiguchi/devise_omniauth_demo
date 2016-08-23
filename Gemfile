@@ -15,10 +15,10 @@ gem 'jquery-rails'
 # gem 'jquery-ui-rails'
 # gem 'kaminari', git: 'git://github.com/amatsuda/kaminari.git', branch: 'master'
 gem 'omniauth-oauth2', '~> 1.3.1'
-gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-# gem 'omniauth-linkedin'
 gem 'omniauth-google-oauth2'
+# gem 'omniauth-linkedin'
+gem 'omniauth-twitter'
 gem 'sass-rails', '~> 5.0'
 gem 'simple_form', github: 'kesha-antonov/simple_form', branch: 'rails-5-0'
 gem 'slim-rails'
@@ -46,8 +46,6 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'pry-rescue'
   gem 'pry-byebug'
-  # Color console output
-  gem 'rainbow'
 end
 
 group :development do
@@ -65,8 +63,10 @@ end
 
 group :test do
   gem 'capybara-screenshot'
+  gem 'database_cleaner'
   gem 'guard'
   gem 'guard-minitest'
+  gem 'minitest-around'
   gem 'minitest-power_assert'
   gem 'minitest-rails-capybara'
   gem 'minitest-reporters'

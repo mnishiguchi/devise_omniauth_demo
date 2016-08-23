@@ -12,12 +12,12 @@ nav.navbar.navbar-inverse.navbar-static-top
     nav.collapse.navbar-collapse#hamburger
       ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
-          li= link_to "Log out", destroy_user_session_path, method: :delete
+          li= link_to "Sign out", destroy_user_session_path, method: :delete
         - elsif client_signed_in?
-          li= link_to "Log out", destroy_client_session_path, method: :delete
+          li= link_to "Sign out", destroy_client_session_path, method: :delete
         - elsif account_executive_signed_in?
-          li= link_to "Log out", destroy_account_executive_session_path, method: :delete
+          li= link_to "Sign out", destroy_account_executive_session_path, method: :delete
         - elsif admin_signed_in?
-          li= link_to "Log out", destroy_admin_session_path, method: :delete
+          li= link_to "Sign out", destroy_admin_session_path, method: :delete
         - else
           li= link_to "Sign in", new_user_session_path

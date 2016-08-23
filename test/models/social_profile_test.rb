@@ -22,7 +22,17 @@
 require 'test_helper'
 
 class SocialProfileTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  def setup
+    @social_profile = create(:social_profile)
+  end
+
+  test "should be valid" do
+    assert @social_profile.valid?
+    assert belong_to :user
+    assert validate_uniqueness_of :uid
+    # NOTE: Actually uniqueness of uid is enforced with scope: :provider,
+    # but we cannot test the use of scoped uniqueness.
+  end
+
 end

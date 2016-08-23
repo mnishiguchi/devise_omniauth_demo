@@ -31,5 +31,8 @@ class UserTest < ActiveSupport::TestCase
 
   test "should be valid" do
     assert @user.valid?
+    assert have_many :social_profile
+    assert validate_presence_of :email
   end
+
 end

@@ -21,17 +21,17 @@
 
 FactoryGirl.define do
   factory :social_profile do
-    user nil
-    provider "MyString"
-    uid "MyString"
-    name "MyString"
-    nickname "MyString"
-    email "MyString"
-    url "MyString"
-    image_url "MyString"
-    description "MyString"
-    others "MyText"
+    provider "twitter"
+    sequence(:uid)  { |n| (1000 + n).to_s }
+    sequence(:name) { |n| "User_#{n} Example"}
+    nickname    ""
+    email       "user@example.com"
+    url         "https://twitter.com/MNishiguchiDC"
+    image_url   "https://pbs.twimg.com/profile_images/755494119997222912/ZZr9NyZZ_400x400.jpg"
+    description ""
+    others      "MyText"
     credentials "MyText"
-    raw_info "MyText"
+    raw_info    "MyText"
+    user
   end
 end
