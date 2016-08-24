@@ -21,13 +21,13 @@
 
 require 'test_helper'
 
-class SocialProfileTest < ActiveSupport::TestCase
+describe SocialProfile do
 
-  def setup
+  before do
     @social_profile = create(:social_profile)
   end
 
-  test "should be valid" do
+  it "should be valid" do
     assert @social_profile.valid?
     assert belong_to :user
     assert validate_uniqueness_of :uid

@@ -1,9 +1,9 @@
 require "test_helper"
 require "support/omniauth_utils"
 
-class OmniauthTest < Capybara::Rails::TestCase
+feature "omniauth interface" do
 
-  setup do
+  before do
     @email = 'nishiguchi.masa@example.com'
   end
 

@@ -20,5 +20,5 @@
 
 ## How to run the test suite
 ```
-$ guard
+$ bundle exec guard
 ```

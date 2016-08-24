@@ -23,16 +23,15 @@
 
 require 'test_helper'
 
-class UserTest < ActiveSupport::TestCase
+describe User do
 
-  def setup
+  before do
     @user = create(:user)
   end
 
-  test "should be valid" do
+  it "should be valid" do
     assert @user.valid?
     assert have_many :social_profile
     assert validate_presence_of :email
   end
-
 end

@@ -381,6 +381,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   minitest-around
   minitest-power_assert
+  minitest-rails
   minitest-rails-capybara
   minitest-reporters
   omniauth-facebook

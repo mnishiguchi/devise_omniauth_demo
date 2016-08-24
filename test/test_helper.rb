@@ -1,6 +1,7 @@
-ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
+ENV["RAILS_ENV"] = "test"
+require File.expand_path("../../config/environment", __FILE__)
+require "rails/test_help"
+require "minitest/rails"
 
 # minitest-reporters
 # https://github.com/kern/minitest-reporters#caveats
@@ -18,6 +19,9 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+# For awesome colorful output
+require "minitest/pride"
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
