@@ -1,6 +1,10 @@
 require "test_helper"
 require "support/omniauth_utils"
 
+def confirmation_url(user)
+  "/users/confirmation?confirmation_token=#{user.confirmation_token}"
+end
+
 feature "omniauth interface" do
 
   let(:email) { 'nishiguchi.masa@example.com' }
@@ -16,8 +20,8 @@ feature "omniauth interface" do
     click_on 'Email me a link to sign in'
     assert_current_path "/"
 
-    visit "/users/confirmation?confirmation_token=#{User.last.confirmation_token}"
-    assert_content page, "Logged in user's dashboard"
+    visit confirmation_url(User.last)
+    assert_content page, "Dashboard for #{email}"
 
     click_on 'Sign out'
     assert_current_path "/"
@@ -35,8 +39,8 @@ feature "omniauth interface" do
     click_on 'Send confirmation email'
     assert_current_path "/"
 
-    visit "/users/confirmation?confirmation_token=#{User.last.confirmation_token}"
-    assert_content page, "Logged in user's dashboard"
+    visit confirmation_url(User.last)
+    assert_content page, "Dashboard for #{email}"
 
     click_on 'Sign out'
     assert_current_path "/"
@@ -55,8 +59,8 @@ feature "omniauth interface" do
     click_on 'Send confirmation email'
     assert_current_path "/"
 
-    visit "/users/confirmation?confirmation_token=#{User.last.confirmation_token}"
-    assert_content page, "Logged in user's dashboard"
+    visit confirmation_url(User.last)
+    assert_content page, "Dashboard for #{email}"
 
     click_on 'Sign out'
     assert_current_path "/"
@@ -65,7 +69,7 @@ feature "omniauth interface" do
     set_omniauth_twitter
 
     find('a[href="/users/auth/twitter"]').click
-    assert_content page, "Logged in user's dashboard"
+    assert_content page, "Dashboard for #{email}"
   end
 
 end

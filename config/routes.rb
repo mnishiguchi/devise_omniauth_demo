@@ -24,6 +24,10 @@ Rails.application.routes.draw do
   # Ask for email address after successful OAuth.
   match '/users/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], as: :finish_signup
 
+  get 'static_pages/home' => 'static_pages#home'
+
+  resources :social_profiles, only: :destroy
+
   # For viewing delivered emails in development environment.
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

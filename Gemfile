@@ -67,10 +67,11 @@ group :test do
   gem 'guard'
   gem 'guard-minitest'
   gem 'minitest-around'
+  gem 'minitest-doc_reporter'
   gem 'minitest-power_assert'
   gem 'minitest-rails'
   gem 'minitest-rails-capybara'
-  gem 'minitest-reporters'
+  # gem 'minitest-reporters'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false

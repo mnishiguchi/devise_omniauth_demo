@@ -1,0 +1,35 @@
+= provide(:title, "User dashboard")
+
+h1 Dashboard for #{@current_user.email}
+
+.table-responsive
+  table.table.borderd
+    thead
+      tr
+        th
+        th Provider
+        th UID
+        th Name
+        th Nickname
+        th Email
+        th URL
+    tbody
+      - @current_user.social_profiles.each do |profile|
+        tr
+          td
+            img[src="#{profile.image_url}" style="height: 60px;"]
+          td= profile.provider
+          td= profile.uid
+          td= profile.name
+          td= profile.nickname
+          td= profile.email
+          td= profile.url
+
+.well
+  .row
+    .col-sm-4
+      = render 'shared/social_connect', provider: :facebook
+    .col-sm-4
+      = render 'shared/social_connect', provider: :google_oauth2
+    .col-sm-4
+      = render 'shared/social_connect', provider: :twitter

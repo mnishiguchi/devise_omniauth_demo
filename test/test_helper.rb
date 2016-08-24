@@ -3,10 +3,13 @@ require File.expand_path("../../config/environment", __FILE__)
 require "rails/test_help"
 require "minitest/rails"
 
-# minitest-reporters
+## Progress-bar-style reporter.
 # https://github.com/kern/minitest-reporters#caveats
-require "minitest/reporters"
-Minitest::Reporters.use!
+# require "minitest/reporters"
+# Minitest::Reporters.use!
+
+## Document-style reporter.
+require 'minitest/doc_reporter'
 
 # Capybara
 require 'minitest/rails/capybara'

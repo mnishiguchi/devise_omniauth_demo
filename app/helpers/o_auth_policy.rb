@@ -59,7 +59,7 @@ module OAuthPolicy
       @uid         = auth["uid"]
       @name        = info["name"]
       @nickname    = info["nickname"]
-      @email       = ""
+      @email       = info["email"]
       @url         = info["urls"]["Twitter"]
       @image_url   = info["image"]
       @description = info["description"].try(:truncate, 255)

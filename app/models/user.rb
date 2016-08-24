@@ -62,10 +62,12 @@ class User < ApplicationRecord
     Thread.current[:current_user]
   end
 
+  # Marks the user as archived by prepending timestamp to its email.
   def archive!
     self.update_column(:email, "#{Time.now.to_i}_#{self.email}")
   end
 
+  # Add social profiles of another user to this user.
   def merge_social_profiles(other)
     other.social_profiles.tap do |profiles|
       profiles.each { |profile| profile.associate_with_user(self) }
@@ -84,11 +86,12 @@ class User < ApplicationRecord
     user = User.current_user || profile.user
 
     # 3. User with verified email from oauth.
+    # If the authentication data includes verified email, search for user.
     unless user
-      # If the authentication data includes verified email, search for user.
       if auth.info.email
         email = auth.info.email
         user  = User.where(email: email).first
+        profile.associate_with_user(user)
       end
     end
 

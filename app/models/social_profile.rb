@@ -38,6 +38,7 @@ class SocialProfile < ApplicationRecord
   end
 
   def associate_with_user(user)
+    # NOTE: Profile user and the specified user must match.
     self.update!(user_id: user.id) unless self.user == user
   end
 

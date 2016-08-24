@@ -28,6 +28,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_url and return
       end
 
+      # Check if user is alreadly signed in.
+      if user_signed_in?
+        # Create a social profile from auth and ssociate that with current user.
+        profile = SocialProfile.find_from_oauth(@auth)
+        profile.associate_with_user(@current_user)
+        flash[:success] = "Successfully connected to #{@auth.provider.capitalize}."
+        redirect_to root_url
+        return
+      end
+
       # If user was not found, search by email or create a new user.
       @user = User.find_or_create_from_oauth(@auth)
 
