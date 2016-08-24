@@ -28,15 +28,20 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_url and return
       end
 
-      # Obtain the provider name from the callee.
-      provider = __callee__.to_s
-
       # If user was not found, search by email or create a new user.
       @user = User.find_or_create_from_oauth(@auth)
 
+      # Provider name (capitalized).
+      provider = case @auth.provider
+                 when "google_oauth2" then "Google"
+                 else @auth.provider.capitalize
+                 end
+
       if @user.persisted? && @user.email_verified?
         sign_in_and_redirect @user, event: :authentication
-        set_flash_message(:notice, :success, kind: provider.capitalize) if is_navigational_format?
+        if is_navigational_format?
+          set_flash_message(:notice, :success, kind: provider)
+        end
       else
         @user.reset_confirmation!
         flash[:warning] = "Please enter your email address to sign in or create an account on this app."

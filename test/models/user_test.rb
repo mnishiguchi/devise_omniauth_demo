@@ -25,13 +25,9 @@ require 'test_helper'
 
 describe User do
 
-  before do
-    @user = create(:user)
-  end
+  subject { create(:user) }
 
   it "should be valid" do
-    assert @user.valid?
-    assert have_many :social_profile
-    assert validate_presence_of :email
+    assert subject.valid?
   end
 end

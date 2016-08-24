@@ -1,5 +1,6 @@
 # This module provides utitity classes to format params for creating a social
 # profile record based on the result of OAuth authentication.
+# NOTE: The subclass names must match provider names.
 module OAuthPolicy
   class Base
     def params

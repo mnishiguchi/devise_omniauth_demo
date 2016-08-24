@@ -86,7 +86,7 @@ class User < ApplicationRecord
     # 3. User with verified email from oauth.
     unless user
       # If the authentication data includes verified email, search for user.
-      if auth.info.email && (auth.info.verified || auth.info.verified_email)
+      if auth.info.email
         email = auth.info.email
         user  = User.where(email: email).first
       end

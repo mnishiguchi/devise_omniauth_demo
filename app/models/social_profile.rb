@@ -27,9 +27,9 @@ class SocialProfile < ApplicationRecord
 
   # Returns a SocialProfile object that corresponds to the specified data.
   def self.find_from_oauth(auth)
-    profile = find_or_create_by(uid: auth.uid, provider: auth.provider)
-    profile.save_oauth_data(auth)
-    profile
+    find_or_create_by(uid: auth.uid, provider: auth.provider).tap do |profile|
+      profile.save_oauth_data(auth)
+    end
   end
 
   def save_oauth_data(auth)

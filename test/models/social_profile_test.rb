@@ -23,16 +23,10 @@ require 'test_helper'
 
 describe SocialProfile do
 
-  before do
-    @social_profile = create(:social_profile)
-  end
+  subject { create(:social_profile) }
 
   it "should be valid" do
-    assert @social_profile.valid?
-    assert belong_to :user
-    assert validate_uniqueness_of :uid
-    # NOTE: Actually uniqueness of uid is enforced with scope: :provider,
-    # but we cannot test the use of scoped uniqueness.
+    assert subject.valid?
   end
 
 end
