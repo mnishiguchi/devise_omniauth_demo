@@ -53,6 +53,8 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'bullet'
+  gem 'guard'
+  gem 'guard-minitest'
   gem 'letter_opener_web'
   gem 'listen', '~> 3.0.5'
   gem 'rails-erd'
@@ -62,16 +64,19 @@ group :development do
 end
 
 group :test do
+  gem 'capybara'
+  gem 'capybara_minitest_spec'
   gem 'capybara-screenshot'
+  gem 'connection_pool'
   gem 'database_cleaner'
-  gem 'guard'
-  gem 'guard-minitest'
-  gem 'minitest-around'
-  gem 'minitest-doc_reporter'
+  gem 'launchy'
   gem 'minitest-power_assert'
   gem 'minitest-rails'
   gem 'minitest-rails-capybara'
-  # gem 'minitest-reporters'
+  gem 'minitest-reporters'
+  gem 'minitest-retry'
+  gem 'mocha'
+  gem 'poltergeist'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
