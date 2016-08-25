@@ -6,8 +6,8 @@
 - if connected
   = link_to fa_icon("fw #{icon_name}", text: "Disconnect"),
     social_profile_path(current_user.social_profile(provider)), method: :delete,
-    class: "btn btn-default btn-disconnect"
+    class: "btn btn-default btn-disconnect #{provider}"
 - else
   = link_to fa_icon("fw #{icon_name}", text: "Connect"),
     eval("user_#{provider}_omniauth_authorize_path"),
-    class: "btn btn-primary btn-connect"
+    class: "btn btn-primary btn-connect #{provider}"

@@ -21,6 +21,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       # Obtain the authentication data.
       @auth = request.env["omniauth.auth"]
+      provider_name = @auth.provider == "google_oauth2" ? "Google" : @auth.provider.capitalize
 
       # Ensure that the authentication data exists.
       unless @auth.present?
@@ -33,7 +34,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         # Create a social profile from auth and ssociate that with current user.
         profile = SocialProfile.find_from_oauth(@auth)
         profile.associate_with_user(@current_user)
-        flash[:success] = "Successfully connected to #{@auth.provider.capitalize}."
+        flash[:success] = "Connected to #{provider_name}."
         redirect_to root_url
         return
       end
@@ -41,16 +42,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       # If user was not found, search by email or create a new user.
       @user = User.find_or_create_from_oauth(@auth)
 
-      # Provider name (capitalized).
-      provider = case @auth.provider
-                 when "google_oauth2" then "Google"
-                 else @auth.provider.capitalize
-                 end
-
       if @user.persisted? && @user.email_verified?
         sign_in_and_redirect @user, event: :authentication
         if is_navigational_format?
-          set_flash_message(:notice, :success, kind: provider)
+          set_flash_message(:notice, :success, kind: provider_name)
         end
       else
         @user.reset_confirmation!

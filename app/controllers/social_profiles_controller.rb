@@ -4,7 +4,8 @@ class SocialProfilesController < ApplicationController
 
   def destroy
     @profile.destroy
-    flash[:success] = "Disconnected from #{@profile.provider.capitalize}"
+    provider_name = @profile.provider == "google_oauth2" ? "Google" : @profile.provider.capitalize
+    flash[:success] = "Disconnected from #{provider_name}"
     redirect_to root_url
   end
 
