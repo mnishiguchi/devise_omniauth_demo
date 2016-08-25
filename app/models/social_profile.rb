@@ -26,7 +26,7 @@ class SocialProfile < ApplicationRecord
   validates_uniqueness_of :uid, scope: :provider
 
   # Returns a SocialProfile object that corresponds to the specified data.
-  def self.find_from_oauth(auth)
+  def self.find_or_create_from_oauth(auth)
     find_or_create_by(uid: auth.uid, provider: auth.provider).tap do |profile|
       profile.save_oauth_data(auth)
     end

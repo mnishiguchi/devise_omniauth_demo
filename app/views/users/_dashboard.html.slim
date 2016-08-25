@@ -3,6 +3,17 @@
 h1 Dashboard for #{@current_user.email}
 
 .table-responsive
+  table.table.table-condensed
+    thead
+      tr
+        th Sign in count
+        th Last signed in
+    tbody
+      tr
+        td= @current_user.sign_in_count
+        td= @current_user.last_sign_in_at
+
+.table-responsive
   table.table.borderd
     thead
       tr
@@ -10,7 +21,6 @@ h1 Dashboard for #{@current_user.email}
         th Provider
         th UID
         th Name
-        th Nickname
         th Email
         th URL
     tbody
@@ -21,9 +31,8 @@ h1 Dashboard for #{@current_user.email}
           td= profile.provider
           td= profile.uid
           td= profile.name
-          td= profile.nickname
           td= profile.email
-          td= profile.url
+          td= link_to profile.url, profile.url
 
 .well
   .row

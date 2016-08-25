@@ -43,6 +43,10 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
         else
           @user.merge_social_profiles(old_user) && old_user.archive!
         end
+
+        # Set the total sign in count on the user.
+        total_sign_in_count = @user.sign_in_count + old_user.sign_in_count
+        @user.update_column(:sign_in_count, total_sign_in_count)
       end
 
       set_flash_message(:notice, :confirmed) if is_flashing_format?

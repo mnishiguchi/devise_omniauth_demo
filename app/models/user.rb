@@ -78,7 +78,7 @@ class User < ApplicationRecord
 
     # Search for the user based on the authentication data.
     # Obtain a SocialProfile object that corresponds to the authentication data.
-    profile = SocialProfile.find_from_oauth(auth)
+    profile = SocialProfile.find_or_create_from_oauth(auth)
 
     # Obtain user with the following precedence.
     # 1. Logged-in user
