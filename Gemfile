@@ -67,6 +67,7 @@ group :test do
   gem 'capybara'
   gem 'capybara_minitest_spec'
   gem 'capybara-screenshot'
+  # gem "capybara-webkit"
   gem 'connection_pool'
   gem 'database_cleaner'
   gem 'launchy'
@@ -78,6 +79,7 @@ group :test do
   gem 'mocha'
   gem 'poltergeist'
   gem 'rails-controller-testing'
+  # gem 'selenium-webdriver', '~> 2.53', '>= 2.53.4'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end

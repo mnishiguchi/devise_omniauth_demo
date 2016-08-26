@@ -1,15 +1,15 @@
-require 'capybara/poltergeist'
 
 # We want to use poltergeist only when we test javascript features
 # so that the rest of the test suite can run faster.
 # So we set the current_driver of capybara to nil after each test.
 class ActiveSupport::TestCase
 
-  def setup
-    Capybara.javascript_driver = :poltergeist
-  end
-  
+  # temporarily select different driver
+  require 'capybara/poltergeist'
+  Capybara.current_driver = :poltergeist
+
   def teardown
-    Capybara.current_driver = nil
+    # switch back to default driver
+    Capybara.use_default_driver
   end
 end
