@@ -1,7 +1,6 @@
 require "test_helper"
 require "support/omniauth_utils"
 # require "support/database_cleaner"
-# require "support/poltergeist"
 
 def confirmation_url(user)
   "/users/confirmation?confirmation_token=#{user.confirmation_token}"

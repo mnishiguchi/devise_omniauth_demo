@@ -6,6 +6,7 @@ feature "social connect" do
 
   scenario "connecting to twitter after signed in with email" do
     OmniAuth.config.test_mode = true
+    
     set_omniauth_google_oauth2
     set_omniauth_twitter
     set_omniauth_facebook

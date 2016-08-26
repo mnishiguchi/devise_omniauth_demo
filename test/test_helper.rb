@@ -11,13 +11,15 @@ require "mocha/mini_test"
 # but we can alternatively use a document-style reporter.
 # https://github.com/kern/minitest-reporters#caveats
 require "minitest/reporters"
-Minitest::Reporters.use! #(Minitest::Reporters::SpecReporter.new)
+Minitest::Reporters.use!(
+  #(Minitest::Reporters::SpecReporter.new) # Enable document-style reporter.
+)
 
-# Capybara
+# Capybara and poltergeist
 require 'minitest/rails/capybara'
 require 'capybara-screenshot/minitest'
-# require "capybara/poltergeist"
-# Capybara.javascript_driver = :poltergeist
+require "capybara/poltergeist"
+Capybara.javascript_driver = :poltergeist
 
 # Shoulda-matchers
 Shoulda::Matchers.configure do |config|

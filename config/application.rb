@@ -14,7 +14,7 @@ module OmniauthLoginDemo
 
     # https://github.com/blowmage/minitest-rails
     config.generators do |g|
-      g.test_framework :minitest, spec: false, fixture: false
+      g.test_framework :minitest, spec: true, fixture: false
     end
   end
 end
