@@ -6,7 +6,7 @@ class SocialProfilesController < ApplicationController
     @profile.destroy
     provider_name = @profile.provider == "google_oauth2" ? "Google" : @profile.provider.capitalize
     flash[:success] = "Disconnected from #{provider_name}"
-    redirect_to root_url
+    redirect_to edit_user_registration_url
   end
 
   private

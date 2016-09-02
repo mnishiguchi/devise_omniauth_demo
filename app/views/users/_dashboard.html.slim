@@ -33,12 +33,3 @@ h1 Dashboard for #{@current_user.email}
           td= profile.name
           td= profile.email
           td= link_to profile.url, profile.url
-
-.well
-  .row
-    .col-sm-4
-      = render 'shared/social_connect', provider: :facebook
-    .col-sm-4
-      = render 'shared/social_connect', provider: :google_oauth2
-    .col-sm-4
-      = render 'shared/social_connect', provider: :twitter

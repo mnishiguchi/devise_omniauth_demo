@@ -1,10 +1,4 @@
 - if user_signed_in?
   = render 'users/dashboard'
-- elsif client_signed_in?
-  = render 'home_client'
-- elsif account_executive_signed_in?
-  = render 'home_ae'
-- elsif admin_signed_in?
-  = render 'home_admin'
 - else
   = render 'home_default'

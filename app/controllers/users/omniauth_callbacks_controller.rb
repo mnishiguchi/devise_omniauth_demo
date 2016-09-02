@@ -21,7 +21,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         profile = SocialProfile.find_or_create_from_oauth(@auth)
         profile.associate_with_user(@current_user)
         flash[:success] = "Connected to #{provider_name}."
-        redirect_to(root_url) and return
+        redirect_to(edit_user_registration_url) and return
       end
 
       # Obtain user by auth data.

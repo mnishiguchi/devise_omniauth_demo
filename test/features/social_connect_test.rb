@@ -24,11 +24,14 @@ feature "social connect" do
     visit confirmation_url(User.last)
     assert_content page, "Dashboard for #{email}"
 
+    # Visit the setting page.
+    click_on "Settings"
+
     # Connect to Twitter.
     find(".btn-connect.twitter").click
     assert_selector ".btn-disconnect.twitter"
     assert_content page, /connected to Twitter/i
-    
+
     # Connect to Google.
     find(".btn-connect.google_oauth2").click
     assert_selector ".btn-disconnect.google_oauth2"
