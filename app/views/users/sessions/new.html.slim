@@ -1,3 +1,20 @@
-= provide(:title, "Log in")
+= provide(:title, "Sign in")
 
-= render 'users/shared/login_with_email'
+.row
+  .col-sm-offset-3.col-sm-6
+
+    h2
+      | Sign in
+    = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      .form-inputs
+        = f.input :email, required: false, autofocus: true
+        = f.input :password, required: false
+        = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
+      .form-group
+        .btn-group
+          = f.button :submit, "Sign in with password", class: "btn btn-primary outline login_submit", title: "Sign in"
+          p or ...
+          = render 'shared/omniauth_buttons'
+
+    .form-group
+      = render "users/shared/links"

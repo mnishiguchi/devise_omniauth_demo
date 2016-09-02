@@ -1,5 +1,8 @@
 require 'simplecov'
 SimpleCov.start
+SimpleCov.add_filter do |src_file|
+  /test/ =~ src_file.filename
+end
 
 ENV["RAILS_ENV"] = "test"
 require File.expand_path("../../config/environment", __FILE__)
@@ -12,7 +15,7 @@ require "mocha/mini_test"
 # https://github.com/kern/minitest-reporters#caveats
 require "minitest/reporters"
 Minitest::Reporters.use!(
-  #(Minitest::Reporters::SpecReporter.new) # Enable document-style reporter.
+  Minitest::Reporters::SpecReporter.new # Enable document-style reporter.
 )
 
 # Capybara and poltergeist
@@ -30,8 +33,8 @@ Shoulda::Matchers.configure do |config|
 end
 
 # Retry
-require 'minitest/retry'
-Minitest::Retry.use!
+# require 'minitest/retry'
+# Minitest::Retry.use!
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.

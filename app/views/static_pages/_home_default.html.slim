@@ -17,4 +17,8 @@
           | Continue with Twitter
 
         a[href="/users/sign_in" class="btn btn-sign-in-with-email"]
-          | Sign in with email
+          | Sign in with password
+
+      p
+        ' Are you new?
+        = link_to "Sign up now!", "/users/sign_up"
