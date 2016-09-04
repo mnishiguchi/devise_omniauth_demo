@@ -27,11 +27,7 @@ class User < ApplicationRecord
   # Configure devise modules.
   devise :database_authenticatable, :registerable,
          :trackable, :validatable, :confirmable, :omniauthable,
-         :omniauth_providers => [
-           :facebook,
-           :google_oauth2,
-           :twitter
-         ]
+         omniauth_providers: [:facebook, :google_oauth2, :twitter]
 
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/
@@ -39,27 +35,31 @@ class User < ApplicationRecord
   # Validate email with a custom email validator.
   validates :email, presence: true, email: true
 
+  # Returns a social profile object with the specified provider if any.
   def social_profile(provider)
     social_profiles.select{ |sp| sp.provider == provider.to_s }.first
   end
 
+  # Returns true if the user has a verified email (not a temp email).
   def email_verified?
     self.email && self.email !~ TEMP_EMAIL_REGEX
   end
 
+  # Used when we want to detect the email duplication error after form submission.
+  def email_exists_in_database?
+    messages = self.errors.messages
+    (messages.size == 1) && (messages[:email].first == "has already been taken")
+  end
+
+  # Used when we want to detect the "already confirled" error after form submission.
+  def email_already_confirmed?
+    messages = self.errors.messages
+    (messages.size == 1) && (messages[:email].first == "was already confirmed")
+  end
+
+  # Puts the user into the unconfirmed state.
   def reset_confirmation!
     self.update_column(:confirmed_at, nil)
-  end
-
-  # Makes current_user available via User.
-  # Userd in ApplicationController.
-  def self.current_user=(user)
-    Thread.current[:current_user] = user
-  end
-
-  # References current_user via User.
-  def self.current_user
-    Thread.current[:current_user]
   end
 
   # Marks the user as archived by prepending timestamp to its email.
@@ -67,11 +67,32 @@ class User < ApplicationRecord
     self.update_column(:email, "#{Time.now.to_i}_#{self.email}")
   end
 
-  # Add social profiles of another user to this user.
+  # Associates social profiles of another user to this user.
   def merge_social_profiles(other)
-    other.social_profiles.tap do |profiles|
-      profiles.each { |profile| profile.associate_with_user(self) }
-    end
+    other.social_profiles.each { |profile| profile.associate_with_user(self) }
+  end
+
+  # Merges and archives the old account.
+  def merge_old_account!(old_user)
+    self.merge_social_profiles(old_user) unless old_user.social_profiles.empty?
+    old_user.archive!
+
+    # Set the total sign in count on the user.
+    total_sign_in_count = self.sign_in_count + old_user.sign_in_count
+    self.update_column(:sign_in_count, total_sign_in_count)
+
+    # TODO: What else do we want to merge?
+  end
+
+  # Makes current_user available via User.
+  # Set up in ApplicationController.
+  def self.current_user=(user)
+    Thread.current[:current_user] = user
+  end
+
+  # References current_user via User.
+  def self.current_user
+    Thread.current[:current_user]
   end
 
   def self.find_or_create_from_oauth(auth)
@@ -89,8 +110,7 @@ class User < ApplicationRecord
     # If the authentication data includes verified email, search for user.
     unless user
       if auth.info.email
-        email = auth.info.email
-        user  = User.where(email: email).first
+        user  = User.where(email: auth.info.email).first
         profile.associate_with_user(user)
       end
     end
@@ -102,16 +122,17 @@ class User < ApplicationRecord
       # Password is not required for users with social_profiles therefore
       # it is OK to generate a random password for them.
       temp_email = "#{User::TEMP_EMAIL_PREFIX}-#{Devise.friendly_token[0,20]}.com"
-      user = User.new(email:    email ? email : temp_email,
-                      password: Devise.friendly_token[0,20] )
+      user = User.new email:    auth.info.email || temp_email,
+                      password: Devise.friendly_token[0,20]
+      user.tap do |u|
+        # This is to postpone the delivery of confirmation email.
+        u.skip_confirmation!
 
-      # This is to postpone the delivery of confirmation email.
-      user.skip_confirmation!
+        # Save the temp email to database, skipping validation.
+        u.save(validate: false)
 
-      # Save the temp email to database, skipping validation.
-      user.save(validate: false)
-
-      profile.associate_with_user(user)
+        profile.associate_with_user(u)
+      end
     end
 
     user

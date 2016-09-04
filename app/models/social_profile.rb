@@ -33,8 +33,8 @@ class SocialProfile < ApplicationRecord
   end
 
   def save_oauth_data(auth)
-    # Create params in correct format through a policy, then update the profile.
-    self.update_attributes(policy(auth).params) if valid_oauth?(auth)
+    # Create params in correct format, then update the profile.
+    self.update_attributes(params_from_oauth(auth)) if valid_oauth?(auth)
   end
 
   def associate_with_user(user)
@@ -44,11 +44,10 @@ class SocialProfile < ApplicationRecord
 
   private
 
-    # Returns a policy object for the specified authentication data.
-    def policy(auth)
-      # Dynamically create an instance of appropriate policy.
-      class_name = "#{auth['provider']}".classify
-      "OAuthPolicy::#{class_name}".constantize.new(auth)
+    # Returns params based on the specified authentication data.
+    def params_from_oauth(auth)
+      class_name = "#{auth['provider']}".classify  # Facebook, Twitter etc.
+      "SocialProfileParams::#{class_name}".constantize.new(auth).params
     end
 
     def valid_oauth?(auth)
