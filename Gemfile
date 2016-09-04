@@ -77,9 +77,10 @@ group :test do
   gem 'minitest-reporters'
   gem 'minitest-retry'
   gem 'mocha'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'poltergeist'
   gem 'rails-controller-testing'
-  # gem 'selenium-webdriver', '~> 2.53', '>= 2.53.4'
+  gem 'selenium-webdriver', '~> 2.53', '>= 2.53.4'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end

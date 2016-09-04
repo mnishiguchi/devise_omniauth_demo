@@ -27,9 +27,8 @@ class UsersController < ApplicationController
     # Returns true if the submitted email already exists in the database.
     # Returns false if there are any other error messages.
     def email_already_taken?
-      regex = /has already been taken/
       messages = @user.errors.messages
-      (messages.size == 1) && regex.match(messages[:email].first)
+      (messages.size == 1) && (messages[:email].first == "has already been taken")
     end
 
     def user_params

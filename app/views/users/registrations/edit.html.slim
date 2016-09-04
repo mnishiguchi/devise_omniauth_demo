@@ -3,29 +3,61 @@
 .row
   .col-sm-offset-2.col-sm-8
 
-    h2 Settings
+    h1.h2 Settings
 
-    .well
-      = gravatar_for(current_user, size: 48)
-      p = link_to "Update picture", "http://gravatar.com/emails"
+    .h4.page-header
+      | Email settings
 
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
       = f.error_notification
+
       .form-inputs
-        = f.input :email, required: true, autofocus: true
+        = f.input :email, required: true, autofocus: true, label: "Your email"
         - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-          p
-            | Currently waiting confirmation for:
-            = resource.unconfirmed_email
+          p Currently waiting confirmation for: #{resource.unconfirmed_email}
 
       .form-group
-        = f.button :submit, "Update"
+        = f.button :button, "Update", class: "submit btn btn-success",
+        data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Processing..." }
 
-    hr
+        = link_to "Back", :back
 
-    h3
-      | Cancel my account
+    .h4.page-header
+      | Connections
+
+      .table-responsive
+        table.table.borderd
+          thead
+            tr
+              th
+              th
+              th
+          tbody
+            tr
+              - profile = @current_user.social_profile :facebook
+              td Facebook
+              td
+                img[src="#{profile.image_url if profile}" style="height: 60px;"]
+              td
+                = render 'shared/social_connect', provider: :facebook
+            tr
+              - profile = @current_user.social_profile :google_oauth2
+              td Google
+              td
+                img[src="#{profile.image_url if profile}" style="height: 60px;"]
+              td
+                = render 'shared/social_connect', provider: :google_oauth2
+            tr
+              - profile = @current_user.social_profile :twitter
+              td Twitter
+              td
+                img[src="#{profile.image_url if profile}" style="height: 60px;"]
+              td
+                = render 'shared/social_connect', provider: :twitter
+
+    .h4.page-header
+      | Delete account
     p
-      | Unhappy?
-      = link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
-    = link_to "Back", :back
+      = button_to "Delete account", registration_path(resource_name),
+        data: { confirm: "Are you sure?", disable_with: "<i class='fa fa-spinner fa-spin'></i> Processing..." },
+        method: :delete, class: "submit btn btn-danger"

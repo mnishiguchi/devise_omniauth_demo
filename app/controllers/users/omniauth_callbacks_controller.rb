@@ -1,16 +1,8 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
-  def facebook
-    omniauth_callback;
-  end
-  # def github; omniauth_callback; end
-  def google_oauth2
-    omniauth_callback;
-  end
-  # def linkedin; omniauth_callback; end
-  def twitter
-    omniauth_callback;
-  end
+  def facebook;      omniauth_callback; end
+  def google_oauth2; omniauth_callback; end
+  def twitter;       omniauth_callback; end
 
   private
 
@@ -21,13 +13,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       # Obtain the authentication data.
       @auth = request.env["omniauth.auth"]
-      provider_name = @auth.provider == "google_oauth2" ? "Google" : @auth.provider.capitalize
-
-      # Ensure that the authentication data exists.
-      unless @auth.present?
-        flash[:danger] = "Authentication data was not provided"
-        redirect_to root_url and return
-      end
+      provider_name = (@auth.provider == "google_oauth2") ? "Google" : @auth.provider.capitalize
 
       # Check if user is alreadly signed in.
       if user_signed_in?
@@ -35,18 +21,17 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         profile = SocialProfile.find_or_create_from_oauth(@auth)
         profile.associate_with_user(@current_user)
         flash[:success] = "Connected to #{provider_name}."
-        redirect_to root_url
-        return
+        redirect_to(edit_user_registration_url) and return
       end
 
-      # If user was not found, search by email or create a new user.
+      # Obtain user by auth data.
       @user = User.find_or_create_from_oauth(@auth)
 
+      # Obtain user by email or create a new user.
       if @user.persisted? && @user.email_verified?
-        sign_in_and_redirect @user, event: :authentication
-        if is_navigational_format?
-          set_flash_message(:notice, :success, kind: provider_name)
-        end
+        sign_in @user
+        flash[:success] = "Successfully authenticated from #{provider_name} account."
+        redirect_to root_url
       else
         @user.reset_confirmation!
         flash[:warning] = "Please enter your email address to sign in or create an account on this app."
@@ -54,30 +39,3 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
     end
 end
-
-# You should configure your model like this:
-# devise :omniauthable, omniauth_providers: [:twitter]
-
-# You should also create an action method in this controller like this:
-# def twitter
-# end
-
-# More info at:
-# https://github.com/plataformatec/devise#omniauth
-
-# GET|POST /resource/auth/twitter
-# def passthru
-#   super
-# end
-
-# GET|POST /users/auth/twitter/callback
-# def failure
-#   super
-# end
-
-# protected
-
-# The path used when OmniAuth fails
-# def after_omniauth_failure_path_for(scope)
-#   super(scope)
-# end

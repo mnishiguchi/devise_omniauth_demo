@@ -1,7 +1,5 @@
 require "test_helper"
 require "support/omniauth_utils"
-# require "support/database_cleaner"
-# require "support/poltergeist"
 
 def confirmation_url(user)
   "/users/confirmation?confirmation_token=#{user.confirmation_token}"
@@ -21,48 +19,77 @@ end
 
 feature "authentication" do
 
-  let(:email) { 'nishiguchi.masa@example.com' }
+  let(:user_email) { "nishiguchi.masa@example.com" }
 
-  scenario "new user signs in with email then signs in with twitter" do
-
-    OmniAuth.config.test_mode = true
-    set_omniauth_twitter
+  scenario "New user signs up with password" do
 
     # Visit home page.
     visit root_path
     assert_content page, "Hello, welcome!"
 
-    # Sign in with email.
-    click_on 'Sign in with email'
-    assert_content page, /Enter email address to sign in/i
+    # Sign up with password.
+    click_on "Sign up"
+    assert_content page, /sign up/i
 
-    fill_in 'Email', with: email
-    click_on 'Email me a link to sign in'
+    fill_in "user_email", with: user_email
+    fill_in "user_password", with: "password"
+    fill_in "user_password_confirmation", with: "password"
+    click_on "Email me a link to sign in"
     assert_current_path "/"
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{email}"
+    assert_content page, "Dashboard for #{user_email}"
     assert_content page, flash_email_confirmed
 
     # Sign out.
-    click_on 'Sign out'
+    click_on "Sign out"
+    assert_current_path "/"
+  end
+
+  scenario "Registered user signs in with password then signs in with twitter" do
+
+    OmniAuth.config.test_mode = true
+    set_omniauth_twitter
+
+    # Create a password-registered user in the database.
+    User.new(email: user_email, password: "password") do |user|
+      user.skip_confirmation!
+      user.save!
+    end
+
+    # Visit home page.
+    visit root_path
+    assert_content page, "Hello, welcome!"
+
+    # Sign in with password.
+    click_on "Sign in with password"
+    assert_content page, /sign in/i
+
+    fill_in "user_email", with: user_email
+    fill_in "user_password", with: "password"
+    click_on "Sign in with password"
     assert_current_path "/"
 
-    # Sign in with twitter.
+    # Sign out.
+    click_on "Sign out"
+    assert_current_path "/"
+
+    # Sign in with twitter for the first time.
     find('a[href="/users/auth/twitter"]').click
     assert_content page, "Please enter your email address."
 
-    fill_in 'Email', with: email
-    click_on 'Send confirmation email'
+    # Email confirmation.
+    fill_in "Email", with: user_email
+    click_on "Send confirmation email"
     assert_current_path "/"
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{email}"
+    assert_content page, "Dashboard for #{user_email}"
     assert_content page, flash_email_confirmed
 
-    click_on 'Sign out'
+    click_on "Sign out"
     assert_content page, flash_signed_out
     assert_current_path "/"
   end
@@ -72,28 +99,29 @@ feature "authentication" do
     OmniAuth.config.test_mode = true
     set_omniauth_twitter
 
-    # Sign in with twitter.
+    # Sign in with twitter for the first time.
     visit root_url
     find('a[href="/users/auth/twitter"]').click
     assert_content page, "Please enter your email address."
 
-    fill_in 'Email', with: email
-    click_on 'Send confirmation email'
+    # Email confirmation.
+    fill_in "Email", with: user_email
+    click_on "Send confirmation email"
     assert_current_path "/"
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{email}"
+    assert_content page, "Dashboard for #{user_email}"
     assert_content page, flash_email_confirmed
 
     # Sign out.
-    click_on 'Sign out'
+    click_on "Sign out"
     assert_content page, flash_signed_out
     assert_current_path "/"
 
     # Sign in with twitter again.
     find('a[href="/users/auth/twitter"]').click
-    assert_content page, "Dashboard for #{email}"
+    assert_content page, "Dashboard for #{user_email}"
     assert_content page, flash_oauth_success_twitter
   end
 
