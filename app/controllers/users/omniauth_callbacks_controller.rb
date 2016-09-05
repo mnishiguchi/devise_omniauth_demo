@@ -35,7 +35,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       else
         @user.reset_confirmation!
         flash[:warning] = "Please enter your email address to sign in or create an account on this app."
-        redirect_to finish_signup_path(@user)
+        redirect_to user_finish_signup_url(@user)
       end
     end
 end

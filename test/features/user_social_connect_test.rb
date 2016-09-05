@@ -1,6 +1,6 @@
 require "test_helper"
 
-feature "social connect" do
+feature "user social connect" do
 
   let(:email) { 'nishiguchi.masa@example.com' }
 

@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   }
 
   # Ask for email address after successful OAuth.
-  match "/users/:id/finish_signup" => "users#finish_signup", via: [:get, :patch], as: :finish_signup
+  match "/users/:id/finish_signup" => "users#finish_signup", via: [:get, :patch], as: :user_finish_signup
 
   # Sometimes after invalid form submission, Devise hits `/users` for some reason.
   # Therefore we need to define this to avoid an exception raised.

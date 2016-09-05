@@ -7,7 +7,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if request.patch?
-      if signed_up_but_not_confirmed? || email_already_taken?
+      @user.skip_confirmation_notification!
+      if finish_signed_up_but_email_not_confirmed? || @user.email_exists_in_database?
         @user.send_confirmation_instructions
         flash[:info] = 'We sent you a link to sign in. Please check your inbox.'
         redirect_to root_url
@@ -19,16 +20,8 @@ class UsersController < ApplicationController
 
     # Returns true if the user was successfully signed up but
     # his/her email is not confirmed yet.
-    def signed_up_but_not_confirmed?
-      @user.skip_confirmation_notification!
+    def finish_signed_up_but_email_not_confirmed?
       @user.update(user_params) && !@user.confirmed?
-    end
-
-    # Returns true if the submitted email already exists in the database.
-    # Returns false if there are any other error messages.
-    def email_already_taken?
-      messages = @user.errors.messages
-      (messages.size == 1) && (messages[:email].first == "has already been taken")
     end
 
     def user_params
