@@ -15,7 +15,7 @@ require "mocha/mini_test"
 # https://github.com/kern/minitest-reporters#caveats
 require "minitest/reporters"
 Minitest::Reporters.use!(
-  Minitest::Reporters::SpecReporter.new # Enable document-style reporter.
+  # Minitest::Reporters::SpecReporter.new # Enable document-style reporter.
 )
 
 # Capybara and poltergeist

@@ -2,21 +2,20 @@ Rails.application.routes.draw do
   root to: "static_pages#home"
 
   devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks",
     registrations:      "users/registrations",
     confirmations:      "users/confirmations",
-    omniauth_callbacks: "users/omniauth_callbacks"
+    sessions:           "users/sessions",
+    passwords:          "users/passwords"
   }
   devise_for :clients, controllers: {
-    # sessions:           "clients/sessions",
-    # passwords:          "clients/passwords",
-    # registrations:      "clients/registrations",
-    # confirmations:      "clients/confirmations",
-  }
-  devise_for :account_executives, controllers: {
-    # sessions:           "account_executives/sessions"
+    confirmations:      "clients/confirmations",
+    sessions:           "clients/sessions",
+    passwords:          "clients/passwords"
   }
   devise_for :admins, controllers: {
-    # sessions:           "admins/sessions"
+    sessions:           "admins/sessions",
+    passwords:          "admins/passwords"
   }
 
   # Ask for email address after successful OAuth.

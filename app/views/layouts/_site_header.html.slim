@@ -16,8 +16,6 @@ nav.navbar.navbar-inverse.navbar-static-top
           li= link_to fa_icon("fw sign-out", text: "Sign out"), destroy_user_session_path, method: :delete
         - elsif client_signed_in?
           li= link_to "Sign out", destroy_client_session_path, method: :delete
-        - elsif account_executive_signed_in?
-          li= link_to "Sign out", destroy_account_executive_session_path, method: :delete
         - elsif admin_signed_in?
           li= link_to "Sign out", destroy_admin_session_path, method: :delete
         - else

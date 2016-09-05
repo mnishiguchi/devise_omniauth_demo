@@ -15,9 +15,22 @@
 #  last_sign_in_ip        :inet
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  type                   :string
 #
 
+# Base class for Single Table Inheritance.
 class Admin < ApplicationRecord
-  # Configure Devise modules
+  # Configure Devise modules.
   devise :database_authenticatable, :trackable, :validatable
+end
+
+# ===
+
+class Administrator < Admin
+end
+
+class AccountExecutive < Admin
+end
+
+class SuperUser < Admin
 end
