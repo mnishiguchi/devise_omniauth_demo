@@ -21,4 +21,7 @@ Example:
 class Like < ApplicationRecord
   belongs_to :likeable, polymorphic: true
   belongs_to :user
+
+  validates :likeable_id, presence: true
+  validates :likeable_type, presence: true
 end

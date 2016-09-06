@@ -1,0 +1,7 @@
+-# Required local variables: property
+
+- store_location
+- if property.liked_by?(current_user)
+  = link_to "Unlike", property_like_path(property, property.likes.where(user_id: current_user.id).ids.first), method: :delete
+- else
+  = link_to "Like", property_likes_path(property), method: :post

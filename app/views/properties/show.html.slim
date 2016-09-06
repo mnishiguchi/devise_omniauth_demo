@@ -1,12 +1,13 @@
-p#notice = notice
+.well
+  p
+    strong Name:
+    = @property.name
+  p
+    strong Description:
+    = @property.description
 
-p
-  strong Name:
-  = @property.name
-p
-  strong Description:
-  = @property.description
+  = render 'properties/like_button', property: @property
 
-= link_to 'Edit', edit_property_path(@property)
-'|
-= link_to 'Back', properties_path
+  = link_to 'Edit', edit_property_path(@property)
+  '&nbsp;|
+  = link_to 'Back', properties_path
