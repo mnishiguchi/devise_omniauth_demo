@@ -1,24 +1,25 @@
 .jumbotron
-  .h2.text-center
-    | Hello, welcome!
-  .row
-    .col-sm-offset-2.col-sm-8
-      p
-        a[href="/users/auth/facebook" class="btn btn-omniauth-facebook"]
-          = fa_icon("fw facebook")
-          | Continue with Facebook
+  .h2
+    | Hello, welcome
+  p Find a nice apartment.
+  p
+    input[type="text" class="form-control" placeholder="Search"]
 
-        a[href="/users/auth/google_oauth2" class="btn btn-omniauth-google"]
-          = fa_icon("fw google")
-          | Continue with Google
+  .p
+    ' New user?
+    = link_to "Sign up now!", "/users/sign_up"
 
-        a[href="/users/auth/twitter" class="btn btn-omniauth-twitter"]
-          = fa_icon("fw twitter")
-          | Continue with Twitter
+.table-responsive
+  table.table.borderd
+    thead
+      tr
+        th Name
+        th Description
+        th
 
-        a[href="/users/sign_in" class="btn btn-sign-in-with-email"]
-          | Sign in with password
-
-      p
-        ' Are you new?
-        = link_to "Sign up now!", "/users/sign_up"
+    tbody
+      - Property.all.each do |property|
+        tr
+          td = property.name
+          td = property.description
+          td = link_to 'Show', property

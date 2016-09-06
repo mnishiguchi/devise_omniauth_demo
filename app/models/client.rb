@@ -25,4 +25,5 @@ class Client < ApplicationRecord
   # Configure Devise modules
   devise :database_authenticatable, :recoverable, :rememberable,
          :trackable, :validatable, :confirmable
+  has_many :properties  # not dependent
 end

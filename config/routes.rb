@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :properties
   root to: "static_pages#home"
 
   devise_for :users, controllers: {
@@ -26,6 +27,8 @@ Rails.application.routes.draw do
   get "users" => "static_pages#home"
 
   resources :social_profiles, only: :destroy
+
+  resources :properties
 
   # For viewing delivered emails in development environment.
   if Rails.env.development?

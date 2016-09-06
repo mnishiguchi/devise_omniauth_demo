@@ -24,3 +24,10 @@ javascript:
   $('.close').on('click', function() {
     $('#flash_message_spacer').hide();
   })
+
+  $('.flash_message').on('mouseover', function() {
+    setTimeout(function() {
+      $('.close').click();
+      $('#flash_message_spacer').hide();
+    }, 1000);
+  })

@@ -17,19 +17,10 @@ h1 Dashboard for #{@current_user.email}
   table.table.borderd
     thead
       tr
-        th
-        th Provider
-        th UID
         th Name
-        th Email
-        th URL
+        th Description
     tbody
-      - @current_user.social_profiles.each do |profile|
+      - Property.all.each do |property|
         tr
-          td
-            img[src="#{profile.image_url}" style="height: 60px;"]
-          td= profile.provider
-          td= profile.uid
-          td= profile.name
-          td= profile.email
-          td= link_to profile.url, profile.url
+          td= property.name
+          td= property.description

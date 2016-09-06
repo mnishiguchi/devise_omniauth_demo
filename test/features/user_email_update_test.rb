@@ -9,6 +9,7 @@ feature "UserEmailUpdate" do
 
     # Sign in with google_oauth2.
     visit root_path
+    click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
     assert_current_path "/"
 
@@ -32,6 +33,7 @@ feature "UserEmailUpdate" do
 
     # Sign in with google_oauth2.
     visit root_path
+    click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
     assert_current_path "/"
 

@@ -1,3 +1,9 @@
+@mixin btn-omniauth {
+  border-radius: 50%;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
 .btn {
     padding: 14px 24px;
     border: 0 none;
@@ -52,6 +58,7 @@
   margin: .5rem 0 2rem 0;
 }
 .btn-omniauth-facebook {
+  @include btn-omniauth;
   color: #fff;
   background-color: $facebook;
   border-color: lighten($facebook, 5%);
@@ -62,6 +69,7 @@
   }
 }
 .btn-omniauth-google {
+  @include btn-omniauth;
   color: #fff;
   background-color: $googleplus;
   border-color: lighten($googleplus, 5%);
@@ -72,6 +80,7 @@
   }
 }
 .btn-omniauth-twitter {
+  @include btn-omniauth;
   color: white;
   background-color: $twitter;
   &:hover {

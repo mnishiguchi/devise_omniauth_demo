@@ -1,4 +1,8 @@
-- if user_signed_in?
+- if admin_signed_in?
+  = render 'admins/dashboard'
+- elsif client_signed_in?
+  = render 'clients/dashboard'
+- elsif user_signed_in?
   = render 'users/dashboard'
 - else
   = render 'home_default'

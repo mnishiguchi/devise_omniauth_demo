@@ -30,7 +30,7 @@ feature "user authentication" do
 
     # Visit home page.
     visit root_path
-    assert_content page, "Hello, welcome!"
+    assert_content page, "Hello, welcome"
 
     # Sign up with password.
     click_on "Sign up"
@@ -68,10 +68,10 @@ feature "user authentication" do
 
     # Visit home page.
     visit root_path
-    assert_content page, "Hello, welcome!"
+    assert_content page, "Hello, welcome"
 
-    # Sign in with password.
-    click_on "Sign in with password"
+    # Sign in.
+    click_on "Sign in"
     assert_content page, /sign in/i
 
     fill_in "user_email", with: user_email
@@ -84,6 +84,7 @@ feature "user authentication" do
     assert_current_path "/"
 
     # Sign in with twitter for the first time.
+    click_on "Sign in"
     find('a[href="/users/auth/twitter"]').click
     assert_content page, "Please enter your email address."
 
@@ -124,8 +125,8 @@ feature "user authentication" do
     # Visit home page.
     visit root_path
 
-    # Sign in with password.
-    click_on "Sign in with password"
+    # Sign in.
+    click_on "Sign in"
     assert_content page, /sign in/i
 
     fill_in "user_email", with: user_email
@@ -138,6 +139,7 @@ feature "user authentication" do
     assert_current_path "/"
 
     # Sign in with google_oauth2 for the first time.
+    click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
     assert_current_path "/"
     assert_content page, User.last.social_profile(:google_oauth2).email
@@ -151,6 +153,7 @@ feature "user authentication" do
 
     # Sign in with twitter for the first time.
     visit root_url
+    click_on "Sign in"
     find('a[href="/users/auth/twitter"]').click
     assert_content page, "Please enter your email address."
 
@@ -170,6 +173,7 @@ feature "user authentication" do
     assert_current_path "/"
 
     # Sign in with twitter again.
+    click_on "Sign in"
     find('a[href="/users/auth/twitter"]').click
     assert_content page, "Dashboard for #{user_email}"
     assert_content page, flash_oauth_success_twitter
@@ -183,6 +187,7 @@ feature "user authentication" do
 
     # Sign in with google_oauth2 for the first time.
     visit root_url
+    click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
 
     # Assuming that Google OAuth contains email address.
@@ -195,6 +200,7 @@ feature "user authentication" do
     assert_current_path "/"
 
     # Sign in with google_oauth2 again.
+    click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
     assert_content page, "Dashboard"
     assert_content page, flash_oauth_success_google
