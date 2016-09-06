@@ -27,16 +27,16 @@ end
 
 # AccountExecutive.
 AccountExecutive.create!(
-  email:    "ae@example.com",
-  password: "longpassword"
+  email:    "account_executive@example.com",
+  password: "password"
 )
 # Administrator.
 Administrator.create!(
   email:    "administrator@example.com",
-  password: "longpassword"
+  password: "password"
 )
 # SuperUser.
 SuperUser.create!(
   email:    "super_user@example.com",
-  password: "longpassword"
+  password: "password"
 )
