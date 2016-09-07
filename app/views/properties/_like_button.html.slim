@@ -2,6 +2,9 @@
 
 - store_location
 - if property.liked_by?(current_user)
-  = link_to "Unlike", property_like_path(property, property.likes.where(user_id: current_user.id).ids.first), method: :delete
+  - like_id = property.like_id_for(current_user)
+  = link_to fa_icon('fw heart'), like_path(like_id), method: :delete,
+      title: "Liked", style: "color: red;", class: "liked"
 - else
-  = link_to "Like", property_likes_path(property), method: :post
+  = link_to fa_icon('fw heart-o'), property_likes_path(property), method: :post,
+      title: "Not liked", class: "not_liked"

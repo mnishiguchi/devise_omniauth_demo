@@ -18,5 +18,5 @@ class Property < ApplicationRecord
   belongs_to :client
   has_many :likes, as: :likeable
 
-  include Liking
+  include Likeable
 end

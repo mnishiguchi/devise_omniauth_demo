@@ -1,4 +1,6 @@
 class PropertiesController < ApplicationController
+  # before_action :authenticate_client!, only: [:edit, :update, :destroy]
+  before_action :correct_client!, only: [:edit, :update, :destroy]
   before_action :set_property, only: [:show, :edit, :update, :destroy]
 
   # GET /properties
@@ -70,5 +72,13 @@ class PropertiesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def property_params
       params.require(:property).permit(:name, :description)
+    end
+
+    # Reject unless the logged-in person is an authorized client.
+    def correct_client!
+      @property = Property.find(params[:id])
+      unless current_client.try(:id) == @property.client_id
+        redirect_to root_url and return
+      end
     end
 end

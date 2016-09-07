@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: "static_pages#home"
+  root "static_pages#home"
 
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks",
@@ -20,7 +20,8 @@ Rails.application.routes.draw do
   }
 
   # Ask for email address after successful OAuth.
-  match "/users/:id/finish_signup" => "users#finish_signup", via: [:get, :patch], as: :user_finish_signup
+  match "/users/:id/finish_signup" => "users#finish_signup",
+    via: [:get, :patch], as: :user_finish_signup
 
   # Sometimes after invalid form submission, Devise hits `/users` for some reason.
   # Therefore we need to define this to avoid an exception raised.
@@ -28,8 +29,9 @@ Rails.application.routes.draw do
 
   resources :social_profiles, only: :destroy
   resources :properties do
-    resources :likes, only: [:create, :destroy]
+    resources :likes, only: :create
   end
+  resources :likes, only: :destroy
 
   # For viewing delivered emails in development environment.
   if Rails.env.development?

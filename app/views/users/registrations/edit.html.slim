@@ -6,6 +6,39 @@
     h1.h2 Settings
 
     .h4.page-header
+      | My behavior
+
+      .table-responsive
+        table.table.table-condensed
+          thead
+            tr
+              th Sign in count
+              th Last signed in
+          tbody
+            tr
+              td= @current_user.sign_in_count
+              td= @current_user.last_sign_in_at
+
+    .h4.page-header
+      | My favorites
+      .table-responsive
+        table.table.borderd
+          thead
+            tr
+              th Name
+              th Description
+              th
+          tbody
+            - Property.find_all_liked_by(current_user).each do |property|
+              tr
+                td= property.name
+                td= property.description
+                td= render 'properties/like_button', property: property
+                td = link_to 'Show', property
+                td = link_to 'Edit', edit_property_path(property)
+                td = link_to 'Destroy', property, data: { confirm: 'Are you sure?' }, method: :delete
+
+    .h4.page-header
       | Email settings
 
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
@@ -34,24 +67,18 @@
             tr
               - profile = @current_user.social_profile :facebook
               td Facebook
-              td
-                img[src="#{profile.image_url if profile}" style="height: 60px;"]
-              td
-                = render 'shared/social_connect', provider: :facebook
+              td = social_profile_image(profile, size: 60)
+              td = render 'shared/social_connect', provider: :facebook
             tr
               - profile = @current_user.social_profile :google_oauth2
               td Google
-              td
-                img[src="#{profile.image_url if profile}" style="height: 60px;"]
-              td
-                = render 'shared/social_connect', provider: :google_oauth2
+              td = social_profile_image(profile, size: 60)
+              td = render 'shared/social_connect', provider: :google_oauth2
             tr
               - profile = @current_user.social_profile :twitter
               td Twitter
-              td
-                img[src="#{profile.image_url if profile}" style="height: 60px;"]
-              td
-                = render 'shared/social_connect', provider: :twitter
+              td = social_profile_image(profile, size: 60)
+              td = render 'shared/social_connect', provider: :twitter
 
     .h4.page-header
       | Delete account

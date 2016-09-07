@@ -22,7 +22,7 @@ feature "user social connect" do
 
     # Click on the confirmation link.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{email}"
+    assert_current_path "/"
 
     # Visit the setting page.
     click_on "Settings"

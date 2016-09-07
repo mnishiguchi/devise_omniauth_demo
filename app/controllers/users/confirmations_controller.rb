@@ -9,10 +9,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       sign_in(@user)
       redirect_to root_url, notice: flash_success
-    elsif @user.email_already_confirmed?
-      # If the only error is that user is already confirmed, just log him/her in.
-      sign_in(@user)
-      redirect_to root_url
     elsif @user.email_exists_in_database?
       # If the same email is in the database and the old user account has no
       # social profiles associated with it, sign in the user with new account and

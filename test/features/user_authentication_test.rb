@@ -30,7 +30,6 @@ feature "user authentication" do
 
     # Visit home page.
     visit root_path
-    assert_content page, "Hello, welcome"
 
     # Sign up with password.
     click_on "Sign up"
@@ -44,7 +43,7 @@ feature "user authentication" do
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{user_email}"
+    assert_content page, "#{user_email}"
     assert_content page, flash_email_confirmed
 
     # Sign out.
@@ -68,7 +67,6 @@ feature "user authentication" do
 
     # Visit home page.
     visit root_path
-    assert_content page, "Hello, welcome"
 
     # Sign in.
     click_on "Sign in"
@@ -95,7 +93,7 @@ feature "user authentication" do
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{user_email}"
+    assert_content page, "#{user_email}"
     assert_content page, flash_email_confirmed
 
     # Click on the confirmation again.
@@ -164,7 +162,7 @@ feature "user authentication" do
 
     # Click on the confirmation link in the inbox.
     visit confirmation_url(User.last)
-    assert_content page, "Dashboard for #{user_email}"
+    assert_content page, "#{user_email}"
     assert_content page, flash_email_confirmed
 
     # Sign out.
@@ -175,7 +173,7 @@ feature "user authentication" do
     # Sign in with twitter again.
     click_on "Sign in"
     find('a[href="/users/auth/twitter"]').click
-    assert_content page, "Dashboard for #{user_email}"
+    assert_content page, "#{user_email}"
     assert_content page, flash_oauth_success_twitter
   end
 
@@ -202,7 +200,7 @@ feature "user authentication" do
     # Sign in with google_oauth2 again.
     click_on "Sign in"
     find('a[href="/users/auth/google_oauth2"]').click
-    assert_content page, "Dashboard"
+    assert_current_path "/"
     assert_content page, flash_oauth_success_google
   end
 end

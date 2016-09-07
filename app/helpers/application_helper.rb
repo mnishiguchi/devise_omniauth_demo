@@ -30,4 +30,15 @@ module ApplicationHelper
     gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
     image_tag(gravatar_url, alt: user.email, class: "gravatar")
   end
+
+  # Returns an image tag for the given user with one of his/her
+  # social profile image if any.
+  def social_image_for(user, options = { size: 80 })
+    image_urls = user.social_profiles.pluck(:image_url)
+    border = 4
+    unless image_urls.empty?
+      image_tag(image_urls.sample, size: options[:size] + border,
+        alt: user.email, class: "gravatar") 
+    end
+  end
 end

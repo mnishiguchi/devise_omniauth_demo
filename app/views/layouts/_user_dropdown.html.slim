@@ -1,0 +1,12 @@
+.dropdown.gravatar_dropdown
+  a.dropdown-toggle.gravatar_link[href="#" data-toggle="dropdown"
+    role="button" aria-haspopup="true" aria-expanded="false"]
+    span.shrink
+      | Signed in as
+    = " "
+    = current_user.email if current_user
+    = social_image_for(current_user, size: 32) || gravatar_for(current_user, size: 32)
+    span.caret
+  ul.dropdown-menu
+    li= link_to fa_icon("fw user", text: "Settings"), edit_user_registration_path
+    li= link_to fa_icon("fw sign-out ", text: "Sign out"), destroy_user_session_path, method: :delete

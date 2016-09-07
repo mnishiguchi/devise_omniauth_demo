@@ -1,13 +1,9 @@
 class LikesController < ApplicationController
   before_action :authenticate_user!
-  before_action :correct_user!, only: :destroy
 
   def create
     @likeable = find_likeable
-
-    @like = current_user.likes.build(likeable: @likeable)
-
-    if @like.save
+    if current_user.likes.create(likeable: @likeable)
       flash[:success] = "Liked it!"
       redirect_back_or @likeable
     else
@@ -17,9 +13,10 @@ class LikesController < ApplicationController
   end
 
   def destroy
+    correct_user!
     @like.destroy
-    flash[:success] = "Unliked successfully"
-    redirect_to root_url
+    flash[:success] = "Unliked it"
+    redirect_back_or @likeable
   end
 
   private
@@ -35,6 +32,6 @@ class LikesController < ApplicationController
     # Find the likeable in question based on the request URL.
     def find_likeable
       resource, id = request.path.split('/')[1, 2]
-      likeable = resource.singularize.classify.constantize.find(id)
+      @likeable = resource.singularize.classify.constantize.find(id)
     end
 end

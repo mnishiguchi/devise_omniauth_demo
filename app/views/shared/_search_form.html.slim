@@ -1,0 +1,17 @@
+.jumbotron
+  p Find a nice apartment.
+
+  form.form-inline
+    .form-group
+      input.form-control[placeholder="Location" type="text"] /
+    .form-group
+      input.form-control[placeholder="Rent" type="text"] /
+    .form-group
+      input.form-control[placeholder="Beds/baths" type="text"] /
+    = link_to "Search", properties_path, class: "btn-search"
+
+  - unless user_signed_in?
+    br
+    p
+      ' New user?
+      = link_to "Sign up now!", "/users/sign_up"

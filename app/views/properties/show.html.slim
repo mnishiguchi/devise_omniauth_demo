@@ -1,13 +1,16 @@
 .well
-  p
-    strong Name:
-    = @property.name
-  p
-    strong Description:
-    = @property.description
+  .alert.alert-danger.placeholder
+  h4= @property.name
+  p= @property.description
 
   = render 'properties/like_button', property: @property
-
+  '&nbsp;|
   = link_to 'Edit', edit_property_path(@property)
   '&nbsp;|
   = link_to 'Back', properties_path
+
+css:
+  .alert.alert-danger.placeholder {
+    height: 80px;
+    width: 80px;
+  }

@@ -21,7 +21,13 @@ client = Client.create!(
 20.times do |i|
   client.properties.create!(
     name: "Apartment #{i}",
-    description: ('a'..'z').to_a.shuffle.join('')
+    description: [
+      Faker::Address.street_address,
+      Faker::Address.city_prefix,
+      Faker::Address.city_suffix,
+      Faker::Address.state_abbr,
+      Faker::Address.zip
+    ].join(' ')
   )
 end
 
