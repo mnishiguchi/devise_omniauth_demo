@@ -2,9 +2,12 @@ class Users::SessionsController < Devise::SessionsController
 # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  # https://github.com/plataformatec/devise/wiki/How-To:-redirect-to-a-specific-page-on-successful-sign-in
+  def new
+    self.resource = resource_class.new(sign_in_params)
+    store_location_for(resource, session[:forwarding_url])
+    super
+  end
 
   # POST /resource/sign_in
   # def create

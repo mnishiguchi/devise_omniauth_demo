@@ -48,14 +48,12 @@ class User < ApplicationRecord
 
   # Used when we want to detect the email duplication error after form submission.
   def email_exists_in_database?
-    messages = self.errors.messages
-    (messages.size == 1) && (messages[:email].first == "has already been taken")
+    (errors.messages.size == 1) && (errors.messages[:email].first == "has already been taken")
   end
 
   # Used when we want to detect the "already confirled" error after form submission.
   def email_already_confirmed?
-    messages = self.errors.messages
-    (messages.size == 1) && (messages[:email].first == "was already confirmed")
+    (errors.messages.size == 1) && (errors.messages[:email].first == "was already confirmed")
   end
 
   # Puts the user into the unconfirmed state.
@@ -123,15 +121,11 @@ class User < ApplicationRecord
       # Password is not required for users with social_profiles therefore
       # it is OK to generate a random password for them.
       temp_email = "#{User::TEMP_EMAIL_PREFIX}-#{Devise.friendly_token[0,20]}.com"
-      user = User.new email:    auth.info.email || temp_email,
-                      password: Devise.friendly_token[0,20]
+      user = User.new(email:    auth.info.email || temp_email,
+                      password: Devise.friendly_token[0,20])
       user.tap do |u|
-        # This is to postpone the delivery of confirmation email.
-        u.skip_confirmation!
-
-        # Save the temp email to database, skipping validation.
-        u.save(validate: false)
-
+        u.skip_confirmation!    # To postpone the delivery of confirmation email.
+        u.save(validate: false) # Save the temp email to database, skipping validation.
         profile.associate_with_user(u)
       end
     end

@@ -74,10 +74,10 @@ class PropertiesController < ApplicationController
       params.require(:property).permit(:name, :description)
     end
 
-    # Reject unless the logged-in person is an authorized client.
+    # Reject unless the logged-in person is an authorized client or admin.
     def correct_client!
       @property = Property.find(params[:id])
-      unless current_client.try(:id) == @property.client_id
+      unless current_client.try(:id) == @property.client_id || admin_signed_in?
         redirect_to root_url and return
       end
     end

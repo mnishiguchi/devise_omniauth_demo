@@ -2,21 +2,17 @@ Rails.application.routes.draw do
 
   root "static_pages#home"
 
+
+  # ===
+  # General users
+  # ===
+
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks",
     registrations:      "users/registrations",
     confirmations:      "users/confirmations",
     sessions:           "users/sessions",
     passwords:          "users/passwords"
-  }
-  devise_for :clients, controllers: {
-    confirmations:      "clients/confirmations",
-    sessions:           "clients/sessions",
-    passwords:          "clients/passwords"
-  }
-  devise_for :admins, controllers: {
-    sessions:           "admins/sessions",
-    passwords:          "admins/passwords"
   }
 
   # Ask for email address after successful OAuth.
@@ -28,10 +24,52 @@ Rails.application.routes.draw do
   get "users" => "static_pages#home"
 
   resources :social_profiles, only: :destroy
+
+
+  # ===
+  # Client users
+  # ===
+
+  devise_for :clients, controllers: {
+    confirmations:      "clients/confirmations",
+    sessions:           "clients/sessions",
+    passwords:          "clients/passwords"
+  }
+  resources :clients, only: :show
+
+
+  # ===
+  # Admin users (a few types)
+  # ===
+
+  devise_for :admins, controllers: {
+    sessions:           "admins/sessions",
+    passwords:          "admins/passwords"
+  }
+  resources :administrators, only: :show
+  resources :account_executives, only: :show
+  resources :super_users, only: :show
+
+
+  # ===
+  # Properties
+  # ===
+
   resources :properties do
     resources :likes, only: :create
   end
+
+
+  # ===
+  # Likeable
+  # ===
+
   resources :likes, only: :destroy
+
+
+  # ===
+  # Letter operner
+  # ===
 
   # For viewing delivered emails in development environment.
   if Rails.env.development?

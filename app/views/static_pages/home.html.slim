@@ -1,6 +1,12 @@
-- if admin_signed_in?
-  = render 'admins/dashboard'
-- elsif client_signed_in?
-  = render 'clients/dashboard'
-- else
-  = render 'home_default'
+= render 'shared/search_form'
+
+hr
+
+.row
+  - 3.times do |i|
+    .col-sm-4
+      .panel.panel-default
+        .panel-heading
+          h4 #{Faker::Hacker.verb.capitalize} #{Faker::Hacker.adjective} #{Faker::Hacker.noun}
+        .panel-body
+          p = Faker::Hacker.say_something_smart

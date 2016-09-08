@@ -38,7 +38,7 @@ module ApplicationHelper
     border = 4
     unless image_urls.empty?
       image_tag(image_urls.sample, size: options[:size] + border,
-        alt: user.email, class: "gravatar") 
+        alt: user.email, class: "gravatar")
     end
   end
 end

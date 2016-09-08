@@ -31,7 +31,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       if @user.persisted? && @user.email_verified?
         sign_in @user
         flash[:success] = "Successfully authenticated from #{formatted_provider_name(@auth.provider)} account."
-        redirect_to root_url
+        redirect_back_or root_url
       else
         @user.reset_confirmation!
         flash[:warning] = "Please enter your email address to sign in or create an account on this app."

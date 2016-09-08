@@ -20,7 +20,7 @@ client = Client.create!(
 
 20.times do |i|
   client.properties.create!(
-    name: "Apartment #{i}",
+    name: "#{Faker::Name.last_name} Apartment",
     description: [
       Faker::Address.street_address,
       Faker::Address.city_prefix,
@@ -33,7 +33,7 @@ end
 
 # AccountExecutive.
 AccountExecutive.create!(
-  email:    "account_executive@example.com",
+  email:    "account-executive@example.com",
   password: "password"
 )
 # Administrator.
@@ -43,6 +43,6 @@ Administrator.create!(
 )
 # SuperUser.
 SuperUser.create!(
-  email:    "super_user@example.com",
+  email:    "super-user@example.com",
   password: "password"
 )

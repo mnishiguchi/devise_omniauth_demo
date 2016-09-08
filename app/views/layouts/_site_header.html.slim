@@ -12,11 +12,11 @@ nav.navbar.navbar-inverse.navbar-static-top
     nav.collapse.navbar-collapse#hamburger
       ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
-          = render 'layouts/user_dropdown'
+          = render 'users/user_dropdown'
         - elsif client_signed_in?
-          li= link_to "Sign out", destroy_client_session_path, method: :delete
+          = render 'clients/client_dropdown'
         - elsif admin_signed_in?
-          li= link_to "Sign out", destroy_admin_session_path, method: :delete
+          = render 'admins/admin_dropdown'
         - else
           li= link_to "Home",  root_path
           li= link_to "Sign up", new_user_registration_path

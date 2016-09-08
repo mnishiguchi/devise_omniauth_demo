@@ -4,10 +4,7 @@ br
 .well Search result
 
 .row
-  .col-sm-7
-    .map
-      img[src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284"]
-  .col-sm-5
+  .col-sm-5.col-sm-push-7
     .well.properties
       - @properties.each do |property|
         .panel.panel-default
@@ -17,11 +14,14 @@ br
           .panel-footer
             p
               = link_to 'Show', property
-              '&nbsp;|
-              = link_to 'Edit', edit_property_path(property)
-              '&nbsp;|
-              = link_to 'Destroy', property, data: { confirm: 'Are you sure?' }, method: :delete
-
+              - if current_client.try!(:id) == property.client_id || admin_signed_in?
+                '&nbsp;|
+                = link_to 'Edit', edit_property_path(property)
+                '&nbsp;|
+                = link_to 'Destroy', property, data: { confirm: 'Are you sure?' }, method: :delete
+  .col-sm-7.col-sm-pull-5
+    .map
+      img[src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284"]
 css:
   .map {
     overflow: auto;
