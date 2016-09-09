@@ -1,0 +1,25 @@
+.jumbotron.search_box
+
+  .container
+    p Find a nice apartment.
+
+    .table-responsive
+      table.table[style='border-bottom: 1px solid white;']
+        tbody
+          tr
+            td
+              input.form-control[placeholder="Location" type="text"] /
+            td
+              input.form-control[placeholder="Rent" type="text"] /
+            td
+              input.form-control[placeholder="Beds/baths" type="text"] /
+            td
+              = link_to "Search", properties_path, class: "btn btn-default btn-search"
+
+    - unless user_signed_in? || client_signed_in? || admin_signed_in?
+      ' New user?
+      = link_to "Sign up now!", "/users/sign_up"
+      br
+      = link_to "Client backdoor", "/clients/sign_in"
+      '&nbsp;|
+      = link_to "Admin backdoor", "/admins/sign_in"

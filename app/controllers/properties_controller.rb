@@ -1,4 +1,6 @@
 class PropertiesController < ApplicationController
+  layout :resolve_layout
+
   # before_action :authenticate_client!, only: [:edit, :update, :destroy]
   before_action :correct_client!, only: [:edit, :update, :destroy]
   before_action :set_property, only: [:show, :edit, :update, :destroy]
@@ -79,6 +81,16 @@ class PropertiesController < ApplicationController
       @property = Property.find(params[:id])
       unless current_client.try(:id) == @property.client_id || admin_signed_in?
         redirect_to root_url and return
+      end
+    end
+
+    # http://stackoverflow.com/a/3025806/3837223
+    def resolve_layout
+      case action_name
+      when "index"
+        "application_with_property_search"
+      else
+        "application"
       end
     end
 end

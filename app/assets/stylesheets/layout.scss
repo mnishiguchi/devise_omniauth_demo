@@ -6,6 +6,14 @@ main {
   min-height: 80vh;
 }
 
+.flex {
+  display: flex;
+}
+
+.alert {
+  border-radius: 0;
+}
+
 .flash_message.alert {
   position: fixed;
   top: 0;
@@ -79,10 +87,6 @@ span.shrink {
   text-align: center;
 }
 
-.flex {
-  display: flex;
-}
-
 .gravatar_dropdown {
   // position: absolute;
   // top: 0;
@@ -134,30 +138,4 @@ footer {
       color: white;
     }
   }
-}
-
-.admin_form {
-  border: 4px solid $red;
-  padding: 0 1rem;
-}
-
-//
-// Override BS3.
-//
-.container .jumbotron {
-  border-radius: 0;
-  background: $gray-1 url(https://www.apartmentshowcase.com/stylesheets/css/images/temp/intro.jpg) no-repeat top;
-  margin-bottom: 0;
-}
-
-.alert {
-  border-radius: 0;
-}
-
-.form-horizontal .form-group {
-  margin-left: 0;
-  margin-right: 0;
-}
-.form-control {
-  border-radius: 0;
 }

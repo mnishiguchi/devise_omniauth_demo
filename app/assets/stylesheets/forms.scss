@@ -1,0 +1,18 @@
+.jumbotron.search_box {
+  border-radius: 0;
+  background: $gray-1 url(https://www.apartmentshowcase.com/stylesheets/css/images/temp/intro.jpg) no-repeat center;
+}
+
+.form-horizontal .form-group {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.form-control {
+  border-radius: 0;
+}
+
+abbr[title="required"] {
+  color: $red;
+  text-decoration: none;
+}
