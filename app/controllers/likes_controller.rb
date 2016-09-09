@@ -1,5 +1,10 @@
 class LikesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!, only: [:index]
+  before_action :authenticate_user!, only: [:create, :destroy]
+
+  def index
+    @likes = Like.all
+  end
 
   def create
     @likeable = find_likeable

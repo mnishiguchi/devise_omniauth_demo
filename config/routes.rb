@@ -19,11 +19,9 @@ Rails.application.routes.draw do
   match "/users/:id/finish_signup" => "users#finish_signup",
     via: [:get, :patch], as: :user_finish_signup
 
-  # Sometimes after invalid form submission, Devise hits `/users` for some reason.
-  # Therefore we need to define this to avoid an exception raised.
-  get "users" => "static_pages#home"
+  resources :users, only: :index
 
-  resources :social_profiles, only: :destroy
+  resources :social_profiles, only: [:index, :destroy]
 
 
   # ===
@@ -35,7 +33,7 @@ Rails.application.routes.draw do
     sessions:           "clients/sessions",
     passwords:          "clients/passwords"
   }
-  resources :clients, only: :show
+  resources :clients, only: [:index, :show]
 
 
   # ===
@@ -46,6 +44,7 @@ Rails.application.routes.draw do
     sessions:           "admins/sessions",
     passwords:          "admins/passwords"
   }
+  resources :admins, only: :index
   resources :administrators, only: :show
   resources :account_executives, only: :show
   resources :super_users, only: :show
@@ -64,7 +63,7 @@ Rails.application.routes.draw do
   # Likeable
   # ===
 
-  resources :likes, only: :destroy
+  resources :likes, only: [:index, :destroy]
 
 
   # ===

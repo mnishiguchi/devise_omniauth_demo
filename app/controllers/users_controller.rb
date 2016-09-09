@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, except: :finish_signup
+  before_action :authenticate_admin!, only: :index
+
+  def index
+    @users = User.all
+  end
 
   # GET   /users/:id/finish_signup - Add email form
   # PATCH /users/:id/finish_signup - Update user data based on the form

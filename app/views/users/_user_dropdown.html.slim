@@ -2,8 +2,6 @@
   a.dropdown-toggle.gravatar_link[href="#" data-toggle="dropdown"
     role="button" aria-haspopup="true" aria-expanded="false"]
     span.shrink
-      | Signed in as
-    = " "
     = current_user.email if current_user
     = social_image_for(current_user, size: 32) || gravatar_for(current_user, size: 32)
     span.caret

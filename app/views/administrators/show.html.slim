@@ -1,3 +1,11 @@
 = provide(:title, "Administrator dashboard")
 
 h1 Administrator dashboard
+
+p = link_to "All users", users_path
+p = link_to "All clients", clients_path
+p = link_to "All admins", admins_path
+p = link_to "All properties", properties_path
+p = link_to "All social profiles", social_profiles_path
+p = link_to "All likes", likes_path
+p = link_to fa_icon("fw sign-out ", text: "Sign out"), destroy_admin_session_path, method: :delete

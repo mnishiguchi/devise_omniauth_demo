@@ -2,11 +2,14 @@
   .panel-body
     h3 = property.name
     p = property.description
+
+    = render 'properties/like_button', property: property
+
   .panel-footer
     p
-      = link_to 'Show', property
-      - if current_client.try!(:id) == property.client_id || admin_signed_in?
-        '&nbsp;|
+      = link_to 'Show', property, class: "btn btn-default btn-sm"
+    - if current_client.try!(:id) == property.client_id || admin_signed_in?
+      p
         = link_to 'Edit', edit_property_path(property)
         '&nbsp;|
         = link_to 'Destroy', property, data: { confirm: 'Are you sure?' }, method: :delete

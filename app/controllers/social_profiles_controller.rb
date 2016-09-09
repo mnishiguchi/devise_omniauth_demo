@@ -1,6 +1,11 @@
 class SocialProfilesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :correct_user!
+  before_action :authenticate_admin!, only: :index
+  before_action :authenticate_user!, only: :destroy
+  before_action :correct_user!, only: :destroy
+
+  def index
+    @social_profiles = SocialProfile.all
+  end
 
   def destroy
     @profile.destroy

@@ -2,11 +2,11 @@
   a.dropdown-toggle.gravatar_link[href="#" data-toggle="dropdown"
     role="button" aria-haspopup="true" aria-expanded="false"]
     span.shrink
-      | Signed in as
-    = " "
     = current_client.email if current_client
+    | &nbsp;
     .label.label-warning Client
     = gravatar_for(current_client, size: 32)
     span.caret
   ul.dropdown-menu
+    li= link_to "My properties", current_client
     li= link_to fa_icon("fw sign-out ", text: "Sign out"), destroy_client_session_path, method: :delete
