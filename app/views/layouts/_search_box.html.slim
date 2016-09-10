@@ -3,24 +3,11 @@
   .container
     p Find a nice apartment.
 
-    .table-responsive
-      table.table[style='border-bottom: 1px solid white;']
-        tbody
-          tr
-            td
-              input.form-control[placeholder="Location" type="text"] /
-            td
-              input.form-control[placeholder="Rent" type="text"] /
-            td
-              input.form-control[placeholder="Beds/baths" type="text"] /
-            td
-              = link_to "Search", properties_path, class: "btn btn-default btn-search"
-
-    - unless user_signed_in? || client_signed_in? || admin_signed_in?
-      p
-        ' New user?
-        = link_to "Sign up now!", "/users/sign_up"
-      p
-        = link_to "Client backdoor", "/clients/sign_in"
-        '&nbsp;|
-        = link_to "Admin backdoor", "/admins/sign_in"
+    .filter_wrapper[style="margin-bottom: 20px;"]
+      = form_for SearchForm.new, url: search_properties_path, html: {method: :get}, class: "form-horizontal" do |f|
+        .form-group
+          .input-group
+            = f.search_field :q, class: "form-control"
+            span.input-group-btn
+              = f.button fa_icon("search", text: "Search"), class: "btn btn-default btn-search"
+        

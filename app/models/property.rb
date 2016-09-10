@@ -19,4 +19,7 @@ class Property < ApplicationRecord
   has_many :likes, as: :likeable
 
   include Likeable
+
+  scope :sorted, ->{ order(name: :asc) }
+  scope :named, ->(q) { where("name ilike ?", "%#{q}%") }
 end

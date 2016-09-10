@@ -1,13 +1,13 @@
 .panel.panel-default
   .panel-body
-    h3 = property.name
+    h3 = link_to property.name, property
     p = property.description
 
-    = render 'properties/like_button', property: property
-
   .panel-footer
+    .pull-right
+      = render 'properties/like_button', property: property
     p
-      = link_to 'Show', property, class: "btn btn-default btn-sm"
+      = link_to 'Show', property
     - if current_client.try!(:id) == property.client_id || admin_signed_in?
       p
         = link_to 'Edit', edit_property_path(property)

@@ -56,6 +56,7 @@ Rails.application.routes.draw do
 
   resources :properties do
     resources :likes, only: :create
+    get :search, on: :collection
   end
 
 

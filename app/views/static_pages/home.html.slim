@@ -6,3 +6,8 @@
           h4 #{Faker::Hacker.verb.capitalize} #{Faker::Hacker.adjective} #{Faker::Hacker.noun}
         .panel-body
           p = Faker::Hacker.say_something_smart
+
+- unless user_signed_in? || client_signed_in? || admin_signed_in?
+  .alert.alert-danger
+    = link_to "Client backdoor", "/clients/sign_in", class: "btn btn-primary outline"
+    = link_to "Admin backdoor", "/admins/sign_in", class: "btn btn-primary outline"

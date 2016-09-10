@@ -5,6 +5,16 @@ class PropertiesController < ApplicationController
   before_action :correct_client!, only: [:edit, :update, :destroy]
   before_action :set_property, only: [:show, :edit, :update, :destroy]
 
+  # GET /properties/search
+  def search
+    # http://api.rubyonrails.org/classes/ActiveModel/ForbiddenAttributesError.html
+    @search_form = SearchForm.new(params[:search_form].permit!)
+    @properties = if @search_form.q.present?
+                  then Property.all.named(@search_form.q)
+                  else Property.all
+                  end.sorted
+  end
+
   # GET /properties
   # GET /properties.json
   def index
@@ -87,7 +97,7 @@ class PropertiesController < ApplicationController
     # http://stackoverflow.com/a/3025806/3837223
     def resolve_layout
       case action_name
-      when "index"
+      when "index", "search"
         "application_with_property_search"
       else
         "application"
